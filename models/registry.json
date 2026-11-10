@@ -1,0 +1,29 @@
+{
+  "production": "leaklens-context-v1",
+  "models": [
+    {
+      "name": "leaklens-context-v1",
+      "version": "1.0.0",
+      "algorithm": "B-charngram-logreg",
+      "dataset_version": "v2.0",
+      "feature_version": "1.1.0",
+      "path": "models/production/leaklens-context-20260930.joblib",
+      "artifacts": "models/v1/{vectorizer,classifier,calibrator}.joblib",
+      "threshold": 0.2,
+      "hybrid_weights": {
+        "rule": 0.2,
+        "ml": 0.8
+      },
+      "metrics": {
+        "validation_f1": 0.9435116409712253,
+        "threshold": 0.2,
+        "all_validation_f1": {
+          "A-tfidf-logreg": 0.8560554803788903,
+          "B-charngram-logreg": 0.9426008405997114,
+          "D-tfidf-svm": 0.8558058241479435,
+          "C-numeric-rf": 0.9354092018898437
+        }
+      }
+    }
+  ]
+}

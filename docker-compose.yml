@@ -1,0 +1,23 @@
+services:
+  leaklens:
+    build: .
+    # Local-first: loopback only. Do NOT publish this port to a network
+    # interface without adding real deployment security (TLS, auth hardening).
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      # Persist DB, models, reports, uploads across restarts.
+      - leaklens-data:/app/data
+      - ./models:/app/models:ro
+      - ./reports:/app/reports
+    environment:
+      LEAKLENS_DATABASE_URL: sqlite:////app/data/leaklens.db
+      LEAKLENS_LOG_LEVEL: INFO
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  leaklens-data:

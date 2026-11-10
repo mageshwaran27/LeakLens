@@ -1,0 +1,31 @@
+{
+  "target": "C:\\Users\\MAGESHWARAN\\OneDrive\\Desktop\\React Projects\\leaklens\\test-fixtures\\vulnerable-project",
+  "files_scanned": 5,
+  "files_discovered": 5,
+  "candidates": 21,
+  "findings": 20,
+  "duration_s": 0.02,
+  "files_per_sec": 290.5,
+  "mb_per_sec": 0.06,
+  "by_severity": {
+    "MEDIUM": 6,
+    "LOW": 12,
+    "HIGH": 2
+  },
+  "by_detector": {
+    "AWS_ACCESS_KEY": 1,
+    "AWS_SECRET_KEY": 1,
+    "GITHUB_TOKEN": 1,
+    "PII_PHONE": 5,
+    "STRIPE_SECRET": 2,
+    "DATABASE_URL": 1,
+    "PII_EMAIL": 2,
+    "JWT": 1,
+    "GENERIC_API_KEY": 3,
+    "PASSWORD_ASSIGN": 1,
+    "GENERIC_SECRET": 1,
+    "BEARER_TOKEN": 1
+  },
+  "finished_at": "2026-10-05T13:48:21.709409+00:00",
+  "note": "Throughput/count benchmark on an unlabeled target. Not precision/recall \u2014 see model evaluation for labeled quality."
+}

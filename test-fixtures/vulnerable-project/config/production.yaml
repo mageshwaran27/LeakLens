@@ -1,0 +1,6 @@
+database:
+  host: production-db.internal
+  username: service_account
+  password: "Synth3tic-DB-P4ssw0rd-EXAMPLE"
+stripe:
+  secret_key: "sk_test_EXAMPLE0123456789abcdef"

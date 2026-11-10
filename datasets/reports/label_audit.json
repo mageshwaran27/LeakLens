@@ -1,0 +1,25 @@
+{
+  "rows": 213726,
+  "required_label_distribution": {
+    "TRUE_SECRET": 95023,
+    "DOCUMENTATION": 13649,
+    "EXAMPLE": 9090,
+    "TEST_SECRET": 22726,
+    "BENIGN_HIGH_ENTROPY": 4546,
+    "FALSE_POSITIVE": 54546,
+    "TRUE_PII": 6100,
+    "PLACEHOLDER": 4546,
+    "BENIGN_CONFIG": 3500
+  },
+  "unused_required_labels": [
+    "UNKNOWN"
+  ],
+  "exact_duplicate_texts": 2094,
+  "conflicting_label_texts": 0,
+  "conflict_examples": [],
+  "malformed_rows": 0,
+  "malformed_ids": [],
+  "automatically_generated": 210000,
+  "manually_reviewed": 3726,
+  "note": "No text has conflicting labels. L2 context variants (same text, different file_ext) share labels and are preserved intentionally; nothing is silently deleted. All labels are generator-assigned; manual review count is 0 by design for synthetic data."
+}

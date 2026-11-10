@@ -1,0 +1,60 @@
+{
+  "feature_version": "1.1.0",
+  "keys": [
+    "entropy",
+    "length",
+    "entropy_x_len",
+    "has_auth_kw",
+    "has_placeholder",
+    "is_test",
+    "is_docs",
+    "is_prod",
+    "has_equals",
+    "upper_ratio",
+    "digit_ratio",
+    "special_ratio",
+    "unique_ratio",
+    "det_aws",
+    "det_github",
+    "det_stripe",
+    "det_slack",
+    "det_privkey",
+    "det_jwt",
+    "det_dburl",
+    "det_bearer",
+    "det_hex40",
+    "det_long_token"
+  ],
+  "sets": {
+    "statistical": [
+      "entropy",
+      "length",
+      "entropy_x_len",
+      "upper_ratio",
+      "digit_ratio",
+      "special_ratio",
+      "unique_ratio"
+    ],
+    "context": [
+      "has_auth_kw",
+      "has_placeholder",
+      "is_test",
+      "is_docs",
+      "is_prod",
+      "has_equals"
+    ],
+    "detector": [
+      "det_aws",
+      "det_github",
+      "det_stripe",
+      "det_slack",
+      "det_privkey",
+      "det_jwt",
+      "det_dburl",
+      "det_bearer",
+      "det_hex40",
+      "det_long_token"
+    ]
+  },
+  "note": "Detector bits are regex pattern hits; no secret values stored."
+}

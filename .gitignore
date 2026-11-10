@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+uploads/
+
+# Large generated datasets
+datasets/synthetic/high_entropy_non_secret/part.jsonl
+datasets/splits/train.jsonl
+datasets/normalized/dataset.jsonl
+datasets/processed/dataset_dedup.jsonl
+
+# Large trained model
+models/baseline/C-numeric-rf.joblib
+
+# Large generated datasets
+datasets/processed/dataset.jsonl
+datasets/train/dataset.jsonl

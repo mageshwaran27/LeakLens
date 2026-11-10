@@ -1,0 +1,196 @@
+{
+  "seed": 42,
+  "ratios": {
+    "train": 0.7,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "source_dataset": "C:\\Users\\MAGESHWARAN\\OneDrive\\Desktop\\React Projects\\leaklens\\datasets\\processed\\dataset_dedup.jsonl",
+  "source_dataset_sha256": "708871455ba24a12921d7806b6fa882f1412559c4976090c1dd0ce37d85378c4",
+  "source_rows": 209181,
+  "method": "group-aware shuffle on leak_group (no group crosses splits)",
+  "splits": {
+    "train": {
+      "rows": 146426,
+      "groups": 146426,
+      "positives": 70695,
+      "negatives": 75731,
+      "positive_pct": 48.28,
+      "negative_pct": 51.72,
+      "labels": {
+        "REAL_SECRET": 70695,
+        "TEST_SECRET": 15405,
+        "DOCUMENTATION_EXAMPLE": 9359,
+        "FALSE_POSITIVE": 38265,
+        "PLACEHOLDER": 3115,
+        "EXAMPLE_SECRET": 6385,
+        "HIGH_ENTROPY_NON_SECRET": 3202
+      },
+      "categories": {
+        "PRIVATE_KEY": 4565,
+        "JWT": 6117,
+        "GENERIC_SECRET": 69557,
+        "API_KEY": 5308,
+        "DATABASE_CREDENTIAL": 9383,
+        "BEARER_TOKEN": 4614,
+        "GITHUB_TOKEN": 7679,
+        "SLACK_TOKEN": 4609,
+        "AWS_CREDENTIAL": 7624,
+        "AZURE_CREDENTIAL": 6167,
+        "PASSWORD": 5322,
+        "GOOGLE_CREDENTIAL": 6224,
+        "PII_CREDIT_CARD": 745,
+        "STRIPE_SECRET": 4634,
+        "PII_EMAIL": 1545,
+        "PII_PHONE": 1556,
+        "PII_IP": 777
+      },
+      "sources": {
+        "leaklens-synthetic-generator": 146426
+      },
+      "languages": {
+        "python": 16973,
+        "json": 10294,
+        "shell": 5216,
+        "yaml": 31079,
+        "markdown": 13510,
+        "properties": 5201,
+        "dockerfile": 5228,
+        "hcl": 5271,
+        "ini": 5184,
+        "powershell": 5171,
+        "java": 5177,
+        "dotenv": 12068,
+        "go": 5256,
+        "javascript": 5295,
+        "typescript": 5109,
+        "toml": 5247,
+        "rust": 5147
+      }
+    },
+    "validation": {
+      "rows": 31377,
+      "groups": 31377,
+      "positives": 15204,
+      "negatives": 16173,
+      "positive_pct": 48.46,
+      "negative_pct": 51.54,
+      "labels": {
+        "HIGH_ENTROPY_NON_SECRET": 630,
+        "EXAMPLE_SECRET": 1392,
+        "DOCUMENTATION_EXAMPLE": 1985,
+        "REAL_SECRET": 15204,
+        "FALSE_POSITIVE": 8122,
+        "TEST_SECRET": 3365,
+        "PLACEHOLDER": 679
+      },
+      "categories": {
+        "GENERIC_SECRET": 14847,
+        "PASSWORD": 1185,
+        "GITHUB_TOKEN": 1651,
+        "API_KEY": 1176,
+        "PRIVATE_KEY": 989,
+        "STRIPE_SECRET": 1034,
+        "AZURE_CREDENTIAL": 1303,
+        "BEARER_TOKEN": 1008,
+        "JWT": 1333,
+        "AWS_CREDENTIAL": 1719,
+        "PII_PHONE": 330,
+        "SLACK_TOKEN": 997,
+        "DATABASE_CREDENTIAL": 1886,
+        "PII_CREDIT_CARD": 163,
+        "GOOGLE_CREDENTIAL": 1273,
+        "PII_IP": 152,
+        "PII_EMAIL": 331
+      },
+      "sources": {
+        "leaklens-synthetic-generator": 31377
+      },
+      "languages": {
+        "dotenv": 2596,
+        "yaml": 6711,
+        "markdown": 2901,
+        "rust": 1126,
+        "json": 2262,
+        "hcl": 1117,
+        "powershell": 1123,
+        "shell": 1057,
+        "python": 3718,
+        "toml": 1077,
+        "java": 1090,
+        "go": 1096,
+        "typescript": 1134,
+        "properties": 1063,
+        "ini": 1118,
+        "javascript": 1047,
+        "dockerfile": 1141
+      }
+    },
+    "test": {
+      "rows": 31378,
+      "groups": 31378,
+      "positives": 15224,
+      "negatives": 16154,
+      "positive_pct": 48.52,
+      "negative_pct": 51.48,
+      "labels": {
+        "FALSE_POSITIVE": 8159,
+        "EXAMPLE_SECRET": 1313,
+        "REAL_SECRET": 15224,
+        "DOCUMENTATION_EXAMPLE": 2079,
+        "PLACEHOLDER": 655,
+        "TEST_SECRET": 3234,
+        "HIGH_ENTROPY_NON_SECRET": 714
+      },
+      "categories": {
+        "GENERIC_SECRET": 14777,
+        "STRIPE_SECRET": 932,
+        "API_KEY": 1216,
+        "PRIVATE_KEY": 1046,
+        "PII_EMAIL": 324,
+        "DATABASE_CREDENTIAL": 1931,
+        "AWS_CREDENTIAL": 1657,
+        "BEARER_TOKEN": 978,
+        "GITHUB_TOKEN": 1670,
+        "PASSWORD": 1193,
+        "GOOGLE_CREDENTIAL": 1303,
+        "JWT": 1350,
+        "AZURE_CREDENTIAL": 1330,
+        "SLACK_TOKEN": 994,
+        "PII_PHONE": 314,
+        "PII_CREDIT_CARD": 192,
+        "PII_IP": 171
+      },
+      "sources": {
+        "leaklens-synthetic-generator": 31378
+      },
+      "languages": {
+        "ini": 1077,
+        "python": 3692,
+        "markdown": 2862,
+        "powershell": 1123,
+        "yaml": 6710,
+        "javascript": 1105,
+        "hcl": 1144,
+        "json": 2251,
+        "go": 1171,
+        "dotenv": 2592,
+        "dockerfile": 1139,
+        "toml": 1019,
+        "java": 1143,
+        "rust": 1109,
+        "properties": 1030,
+        "shell": 1095,
+        "typescript": 1116
+      }
+    }
+  },
+  "overlap_check": {
+    "leaked_groups": 0,
+    "passed": true
+  },
+  "hard_negative_test": {
+    "rows": 25000,
+    "eval_only": true
+  }
+}

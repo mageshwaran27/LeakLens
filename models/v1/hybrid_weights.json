@@ -1,0 +1,8 @@
+{
+  "rule_weight": 0.2,
+  "ml_weight": 0.8,
+  "threshold": 0.2,
+  "val_f1": 0.945419725502713,
+  "method": "grid sweep on 3000-row validation sample",
+  "rule_confidence": "max detector confidence via scan_line (0 when no hit)"
+}

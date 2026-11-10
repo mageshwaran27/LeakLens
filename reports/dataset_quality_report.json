@@ -1,0 +1,40 @@
+{
+  "source_file": "C:\\Users\\MAGESHWARAN\\OneDrive\\Desktop\\React Projects\\leaklens\\datasets\\processed\\dataset_dedup.jsonl",
+  "total": 209181,
+  "positives": 101123,
+  "negatives": 108058,
+  "labels": {
+    "REAL_SECRET": 101123,
+    "DOCUMENTATION_EXAMPLE": 13423,
+    "EXAMPLE_SECRET": 9090,
+    "TEST_SECRET": 22004,
+    "HIGH_ENTROPY_NON_SECRET": 4546,
+    "FALSE_POSITIVE": 54546,
+    "PLACEHOLDER": 4449
+  },
+  "sources": {
+    "leaklens-synthetic-generator": 209181
+  },
+  "languages": {
+    "shell": 7368,
+    "powershell": 7417,
+    "dockerfile": 7508,
+    "go": 7523,
+    "toml": 7343,
+    "json": 14807,
+    "yaml": 44500,
+    "markdown": 19273,
+    "javascript": 7447,
+    "dotenv": 17256,
+    "python": 24383,
+    "hcl": 7532,
+    "rust": 7382,
+    "java": 7410,
+    "ini": 7379,
+    "properties": 7294,
+    "typescript": 7359
+  },
+  "errors": [],
+  "warnings": [],
+  "gates_passed": true
+}

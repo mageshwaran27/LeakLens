@@ -1,0 +1,5 @@
+{
+  "threshold": 0.2,
+  "val_f1": 0.9435116409712253,
+  "model": "B-charngram-logreg"
+}

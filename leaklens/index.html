@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>LeakLens</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--bg2:#F9FAFB;--bg3:#F1F5F9;--t:#0F172A;--t2:#334155;--tm:#64748B;--b:#E2E8F0;--crit:#DF1C1C;--safe:#059669;--warn:#B45309;--acc:#0F172A;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root:not([data-theme=light]){color-scheme:light}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--t);font:400 15px/1.6 Inter,system-ui,sans-serif}
+h1,h2,h3{font-family:"SF Pro Display",Satoshi,Inter,sans-serif;letter-spacing:-.02em;margin:0;font-weight:600;line-height:1.15}
+h1{font-size:clamp(34px,5vw,56px);font-weight:700}h2{font-size:24px}h3{font-size:16px;letter-spacing:-.01em}
+.mono,code,pre{font-family:"JetBrains Mono","SF Mono",monospace;font-size:12.5px}
+p{margin:0}.m{color:var(--tm)}.s{color:var(--t2)}
+button{font:500 14px Inter,sans-serif;cursor:pointer;border:1px solid var(--b);background:#fff;color:var(--t);padding:8px 14px;border-radius:6px;transition:all .15s ease}
+button:hover{background:var(--bg3)}button.p{background:var(--acc);color:#fff;border-color:var(--acc)}button.p:hover{background:#1e293b}
+button.sm{padding:5px 10px;font-size:13px}
+button:disabled{opacity:.55;cursor:default}
+:focus-visible{outline:2px solid #2563EB;outline-offset:2px}
+input[type=text],input[type=password],input[type=number],select{font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--b);border-radius:6px;background:#fff;color:var(--t)}
+.card{border:1px solid var(--b);border-radius:8px;background:#fff}.pad{padding:20px}
+.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.sp{justify-content:space-between}
+.sev{display:inline-flex;align-items:center;gap:6px;font:600 11px Inter;letter-spacing:.04em;padding:2px 8px;border-radius:4px;border:1px solid}
+.sev:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.high{color:var(--crit);background:#FEF2F2;border-color:#FECACA}.medium{color:var(--warn);background:#FFFBEB;border-color:#FDE68A}.low{color:var(--t2);background:var(--bg3);border-color:var(--b)}
+.st{font-size:13px;color:var(--t2)}.st.resolved{color:var(--safe)}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;color:var(--tm);font-size:12.5px;padding:10px 14px;border-bottom:1px solid var(--b);background:var(--bg2);white-space:nowrap;cursor:default}
+td{padding:11px 14px;border-bottom:1px solid var(--b);white-space:nowrap}tr.click{cursor:pointer}tr.click:hover td{background:var(--bg2)}
+.app{display:grid;grid-template-columns:200px 1fr;min-height:100vh}
+.side{border-right:1px solid var(--b);background:var(--bg2);padding:16px 10px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:2px}
+.logo{font:700 15px "SF Pro Display",Inter;letter-spacing:.06em;padding:4px 10px 16px;cursor:pointer}
+.nav{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 10px;border-radius:6px;color:var(--t2);font-size:14px}
+.nav:hover{background:var(--bg3)}.nav.on{background:#fff;color:var(--t);box-shadow:0 0 0 1px var(--b)}
+.top{display:flex;gap:12px;align-items:center;padding:12px 32px;border-bottom:1px solid var(--b);position:sticky;top:0;background:#fff;z-index:5}
+.top input{flex:1;max-width:360px}.main{padding:32px;max-width:1160px}.burger{display:none}
+.priv{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--safe);border-color:#A7F3D0;background:#ECFDF5}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--safe);display:inline-block}
+.hd{margin-bottom:24px}.hd p{margin-top:6px}
+.metric .n{font:600 30px "SF Pro Display",Inter;letter-spacing:-.02em}
+.bar{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc);transition:width .25s ease}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--b);margin-bottom:16px;overflow-x:auto}
+.tab{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 12px;color:var(--tm)}.tab.on{color:var(--t);border-color:var(--t)}
+.code{background:var(--bg2);border:1px solid var(--b);border-radius:8px;overflow-x:auto}
+.code div{display:flex;padding:1px 14px;white-space:pre;font:400 13px/1.7 "JetBrains Mono",monospace}.code b{width:36px;color:var(--tm);font-weight:400;flex:none}
+.term{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:14px;font:400 12.5px/1.7 "JetBrains Mono",monospace;white-space:pre;overflow-x:auto;color:var(--t2)}
+.steps li{list-style:none;padding:5px 0;color:var(--tm)}.steps .d{color:var(--safe)}.steps .a{color:var(--t);font-weight:500}
+.drop{border:1.5px dashed #94A3B8;border-radius:10px;padding:48px 20px;text-align:center;background:var(--bg2);transition:all .15s}.drop.over{background:var(--bg3);border-color:var(--t)}
+.flow{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}.flow>div{flex:1;min-width:120px;padding:14px;border:1px solid var(--b);border-radius:8px;background:#fff}
+.flow>span{align-self:center;color:var(--tm)}
+.sig{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b);font-size:14px}
+.pill{font-size:12px;font-weight:500;color:var(--safe)}.pill.w{color:var(--tm)}
+.land{max-width:1100px;margin:0 auto;padding:0 24px}.lnav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.sec{padding:72px 0;border-top:1px solid var(--b)}
+.ov{position:fixed;inset:0;background:rgba(15,23,42,.4);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20;animation:f .18s ease}
+.md{background:#fff;border-radius:10px;max-width:520px;width:100%;padding:24px;max-height:90vh;overflow:auto}
+.auth{max-width:420px;margin:72px auto;padding:0 16px}
+.auth input{width:100%;margin:4px 0 12px}
+#toast{position:fixed;right:20px;bottom:20px;display:grid;gap:8px;z-index:30}
+.tt{background:var(--t);color:#fff;padding:10px 16px;border-radius:6px;font-size:14px;animation:f .18s ease}
+.tt.err{background:var(--crit)}
+@keyframes f{from{opacity:0;transform:translateY(4px)}}
+.pg{animation:f .2s ease}
+.cbar{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:13px}.cbar span:first-child{width:80px;color:var(--tm)}.cbar .bar{flex:1;height:14px}.cbar .bar i.l{background:var(--t)}.cbar .bar i.b{background:#94A3B8}
+@media(max-width:860px){.app{grid-template-columns:1fr}.side{position:fixed;left:-220px;width:210px;z-index:15;transition:left .2s ease;box-shadow:2px 0 12px rgba(0,0,0,.1)}.side.open{left:0}
+.burger{display:block}.g4,.g3,.g2{grid-template-columns:1fr 1fr}.main{padding:20px 16px}.top{padding:10px 16px}.priv span.x{display:none}}
+@media(max-width:560px){.g4,.g3,.g2{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div id="root"></div><div id="toast" aria-live="polite"></div>
+<script src="./api-client.js"></script>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const S={route:"landing",arg:null,user:null,bootErr:"",authErr:"",q:"",
+ dash:null,projects:null,projDetail:null,projFindings:null,scans:null,scProj:"",
+ scanDetail:null,scanFindings:null,findings:null,fsev:"all",fstat:"all",fproj:"",fconf:"",fpg:0,
+ activity:null,reports:null,repProj:"",repScan:"",repScans:null,repFmt:"json",
+ benches:null,benchJob:null,settings:null,
+ upload:null,scanProj:null,scanOpt:null,scanId:null,projId:null,live:[],liveName:"",scanMeta:null,pct:0,tm:null,
+ findSel:new Set(),ptab:"Overview"};
+const STM={OPEN:"open",RESOLVED:"resolved",IGNORED:"ignored",FALSE_POSITIVE:"fp"};
+const STMREV={open:"OPEN",resolved:"RESOLVED",ignored:"IGNORED",fp:"FALSE_POSITIVE"};
+const PAGE=50;
+function apiErr(e){return (e&&e.message)||"Request failed"}
+function toast(m,isErr){const e=document.createElement("div");e.className="tt"+(isErr?" err":"");e.textContent=m;$("#toast").append(e);setTimeout(()=>e.remove(),3200)}
+function go(r,a){S.route=r;S.arg=a==null?null:a;S.findSel.clear();closeM();render();scrollTo(0,0)}
+function refresh(){const r=S.route;
+ ["dash","projects","activity","scans","findings","reports","benches","settings"].forEach(k=>{S[k]=null});
+ if(r==="project"){S.projDetail=null;S.projFindings=null}
+ if(r==="scanview"||r==="finding"){S.scanDetail=null;S.scanFindings=null;S.fdetail=null}
+ render()}
+function modal(h){closeM();const o=document.createElement("div");o.className="ov";o.id="modal";o.onclick=e=>{if(e.target===o)closeM()};o.innerHTML=`<div class="md" role="dialog" aria-modal="true">${h}</div>`;document.body.append(o)}
+function closeM(){const m=$("#modal");if(m)m.remove()}
+function privacy(){modal(`<h2>Privacy architecture</h2><p class="m" style="margin:8px 0 16px">Raw project data is analyzed on this device. Only sanitized findings leave the scanner.</p><div class="flow" style="flex-direction:column"><div>Project</div><span>↓</span><div>Local scanner</div><span>↓</span><div>Detection</div><span>↓</span><div>Context analysis</div><span>↓</span><div>Sanitized findings</div></div><p class="s" style="margin-top:16px">Raw sensitive values are never stored or displayed, and there is no cloud integration.</p><div style="margin-top:16px"><button class="p" onclick="closeM()">Close</button></div>`)}
+function fmtDT(iso){if(!iso)return"—";const d=new Date(iso);return isNaN(d)?esc(iso):esc(d.toLocaleString())}
+function confPct(c){c=Number(c||0);return c>1?Math.round(c):Math.round(c*100)}
+function sevCls(s){s=String(s||"low").toLowerCase();return s==="high"?"high":s==="medium"?"medium":"low"}
+function stName(s){return {open:"Open",resolved:"Resolved",ignored:"Ignored",fp:"False positive"}[s]||s}
+function need(key,fn){if(S[key]===null||S[key]===undefined){S[key]=false;fn().then(v=>{S[key]=v;render()}).catch(e=>{S[key]={__err:apiErr(e)};render()});return true}return false}
+const loading=h=>`<div class="card pad"><p class="m">${h||"Loading…"}</p></div>`;
+const errBox=(e,extra)=>`<div class="card pad"><h3>Couldn't load data</h3><p class="m" style="margin:6px 0 12px">${esc(e)}</p><div class="row"><button class="sm" onclick="refresh()">Retry</button>${extra||""}</div></div>`;
+const empty=(t,d,b,r)=>`<div class="card pad" style="text-align:center;padding:40px"><h3>${t}</h3><p class="m" style="margin:6px 0 16px">${d}</p>${b?`<button class="p" onclick="go('${r}')">${b}</button>`:""}</div>`;
+const hd=(t,d,r="")=>`<div class="hd row sp"><div><h2>${t}</h2><p class="m">${d}</p></div>${r}</div>`;
+const metric=(l,n,x="")=>`<div class="card pad metric"><p class="m" style="font-size:13px">${l}</p><div class="n">${n}</div>${x}</div>`;
+const tbl=(h,rows)=>`<div class="card tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;
+const sevL=s=>`<span class="sev ${sevCls(s)}">${esc(String(s||"").toUpperCase())}</span>`;
+const stL=s=>`<span class="st ${s}">${stName(s)}</span>`;
+const frow=f=>{const sv=sevCls(f.severity);return `<tr class="click" tabindex="0" onclick="S.fdetail=null;go('finding','${esc(String(f.id))}')" onkeydown="if(event.key=='Enter'){S.fdetail=null;go('finding','${esc(String(f.id))}')}"><td>${sevL(f.severity)}</td><td>${esc(f.category||f.detector_id||"Finding")}</td><td class="mono">${esc(f.file_path)}</td><td class="mono">${esc(String(f.line_number))}</td><td>${confPct(f.confidence)}%</td><td>${stL(STM[f.status]||"open")}</td></tr>`};
+function ftableRows(list){return list.map(frow).join("")}
+/* ---------- auth ---------- */
+async function boot(){render();try{const st=await window.LeakLensAPI.authStatus();
+ if(st.setup_required){go("setup");return}
+ if(window.LeakLensAPI.hasToken()){try{S.user=await window.LeakLensAPI.me()}catch(e){S.user=null}}
+ go(S.user?"dashboard":"login")}catch(e){S.bootErr=apiErr(e);render()}}
+window.LeakLensAPI.onUnauthorized(()=>{S.user=null;S.authErr="Session expired — please log in again";
+ if(!["login","setup","landing"].includes(S.route))go("login");else render()});
+async function doLogin(){S.authErr="";const u=$("#lu").value.trim(),p=$("#lp").value;
+ if(!u||!p){S.authErr="Enter a username and password";render();return}
+ try{const r=await window.LeakLensAPI.login({username:u,password:p});
+  window.LeakLensAPI.setToken(r.token);S.user={username:r.username};S.authErr="";go("dashboard")}
+ catch(e){S.authErr=apiErr(e);render()}}
+async function doSetup(){S.authErr="";const u=$("#su").value.trim(),p1=$("#sp1").value,p2=$("#sp2").value;
+ if(p1!==p2){S.authErr="Passwords do not match";render();return}
+ try{await window.LeakLensAPI.setup({username:u,password:p1});
+  const r=await window.LeakLensAPI.login({username:u,password:p1});
+  window.LeakLensAPI.setToken(r.token);S.user={username:r.username};S.authErr="";go("dashboard");toast("Admin account created")}
+ catch(e){S.authErr=apiErr(e);render()}}
+async function doLogout(){clearInterval(S.tm);try{await window.LeakLensAPI.logout()}catch(e){}
+ window.LeakLensAPI.setToken("");S.user=null;S.bootErr="";S.authErr="";S.q="";
+ S.dash=null;S.projects=null;S.projDetail=null;S.projFindings=null;S.scans=null;S.scProj="";
+ S.scanDetail=null;S.scanFindings=null;S.findings=null;S.hiopen=null;S.recentF=null;S.fdetail=null;
+ S.activity=null;S.reports=null;S.repProj="";S.repScan="";S.repScans=null;
+ S.benches=null;S.benchJob=null;S.settings=null;
+ S.upload=null;S.scanProj=null;S.scanOpt=null;S.scanId=null;S.projId=null;S.live=[];S.liveName="";S.scanMeta=null;S.pct=0;
+ S.findSel=new Set();S.ptab="Overview";S.fsev="all";S.fstat="all";S.fproj="";S.fconf="";S.fpg=0;
+ S.route="landing";S.arg=null;render()}
+function invalidateData(){S.dash=null;S.projects=null;S.projFindings=null;S.scanFindings=null;S.findings=null;S.hiopen=null;S.recentF=null;S.activity=null;S.scans=null;S.reports=null;S.benches=null}
+const loginView=()=>`<div class="auth"><div class="lnav"><b style="letter-spacing:.06em">LEAKLENS</b><button class="sm" onclick="go('landing')">About</button></div>
+ <div class="card pad"><h2>Log in</h2><p class="m" style="margin:6px 0 16px;font-size:13px">Local account on this device.</p>
+ ${S.bootErr?`<p style="color:var(--crit);font-size:13px;margin-bottom:12px">${esc(S.bootErr)} <button class="sm" onclick="boot()">Retry</button></p>`:""}
+ ${S.authErr?`<p style="color:var(--crit);font-size:13px;margin-bottom:12px">${esc(S.authErr)}</p>`:""}
+ <label class="m" style="font-size:13px">Username</label><input type="text" id="lu" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+ <label class="m" style="font-size:13px">Password</label><input type="password" id="lp" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+ <button class="p" style="width:100%;margin-top:8px" onclick="doLogin()">Log in</button></div></div>`;
+const setupView=()=>`<div class="auth"><div class="lnav"><b style="letter-spacing:.06em">LEAKLENS</b></div>
+ <div class="card pad"><h2>Create admin account</h2><p class="m" style="margin:6px 0 16px;font-size:13px">First run on this device. No default credentials exist — you create the administrator.</p>
+ ${S.authErr?`<p style="color:var(--crit);font-size:13px;margin-bottom:12px">${esc(S.authErr)}</p>`:""}
+ <label class="m" style="font-size:13px">Username (min 3 chars)</label><input type="text" id="su" autocomplete="username">
+ <label class="m" style="font-size:13px">Password (min 8 chars)</label><input type="password" id="sp1" autocomplete="new-password">
+ <label class="m" style="font-size:13px">Repeat password</label><input type="password" id="sp2" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSetup()">
+ <button class="p" style="width:100%;margin-top:8px" onclick="doSetup()">Create account</button></div></div>`;
+/* ---------- shell ---------- */
+const NAV=[["dashboard","Dashboard"],["projects","Projects"],["scans","Scans"],["scan","Scan"],["findings","Findings"],["reports","Reports"],["benchmark","Benchmark"],["activity","Activity"]];
+function shell(body){const r=S.route;
+ const on=n=>r===n||(n==="scan"&&["progress","results"].includes(r))||(n==="findings"&&r==="finding")||(n==="scans"&&r==="scanview")||(n==="projects"&&r==="project");
+ return `<div class="app"><nav class="side" id="side" aria-label="Main"><div class="logo" onclick="go('landing')">LEAKLENS</div>${NAV.map(n=>`<button class="nav ${on(n[0])?"on":""}" onclick="go('${n[0]}')">${n[1]}</button>`).join("")}<div style="flex:1"></div><button class="nav ${r==="settings"?"on":""}" onclick="go('settings')">Settings</button></nav>
+ <div><header class="top"><button class="burger sm" aria-label="Open menu" onclick="document.getElementById('side').classList.toggle('open')">Menu</button><input type="text" placeholder="Search findings" aria-label="Search" value="${esc(S.q)}" onkeydown="if(event.key==='Enter'){S.q=this.value;S.fpg=0;S.findings=null;go('findings')}"><button class="priv sm" onclick="privacy()"><i class="dot"></i><b>LOCAL ANALYSIS</b><span class="x">Raw project data stays on this device.</span></button><button class="sm" onclick="doLogout()" title="Log out"> ${esc(S.user?S.user.username:"")} ⏻</button></header><main class="main pg">${body}</main></div></div>`}
+function flow(a){return `<div class="flow">${a.map((x,i)=>(i?`<span>→</span>`:"")+`<div>${x}</div>`).join("")}</div>`}
+/* ---------- landing (public, no fake metrics) ---------- */
+function landing(){const goApp=S.user?"go('dashboard')":"go('login')";
+ return `<div class="land"><div class="lnav"><b style="letter-spacing:.06em">LEAKLENS</b><div class="row"><button onclick="go('benchmark')">Evaluation</button><button class="p" onclick="${goApp}">${S.user?"Open Dashboard":"Log in"}</button></div></div>
+ <section style="padding:64px 0 72px"><div class="grid g2" style="align-items:center;gap:48px"><div><h1>Find exposure before it becomes a breach.</h1><p class="s" style="margin:20px 0 28px;font-size:17px;max-width:480px">LeakLens analyzes your projects for potentially sensitive data, explains why it matters, and keeps raw findings local by default.</p><div class="row"><button class="p" onclick="${goApp}">${S.user?"Scan a Project":"Log in"}</button><button onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Explore the Product</button></div><p class="m" style="margin-top:20px;font-size:13px">Detect. Understand. Remediate. Without unnecessarily exposing what you're trying to protect.</p></div>
+ <div class="card pad" style="box-shadow:0 8px 30px rgba(15,23,42,.08)"><b>How a finding looks</b><p class="m" style="font-size:13px;margin:4px 0 12px">Illustrative layout — values are always masked.</p><div class="row" style="margin-bottom:12px">${sevL("high")} <b>Database Credential</b></div><div class="code" style="margin-bottom:12px"><div><b>26</b>username: service_account</div><div class="hl"><b>27</b>password: "****************"</div></div><p class="s">Each finding shows severity, location, evidence, and a recommended action.</p></div></div></section>
+ <section class="sec"><div class="grid g2" style="gap:48px"><h2>Sensitive information hides in more places than source code.</h2><p class="s">It can appear in configuration, logs, notebooks, documentation, and test data. Existing scanners flag patterns; LeakLens adds context so teams can tell which findings matter.</p></div></section>
+ <section class="sec" id="how"><h2 style="margin-bottom:24px">How LeakLens works</h2>${flow(["<b>Detect</b><p class=m>Patterns and entropy</p>","<b>Understand</b><p class=m>File and field context</p>","<b>Classify</b><p class=m>Risk and confidence</p>","<b>Explain</b><p class=m>Evidence you can read</p>","<b>Remediate</b><p class=m>Concrete next steps</p>"])}</section>
+ <section class="sec"><h2 style="margin-bottom:24px">Privacy architecture</h2>${flow(["Your project","Local analysis","Sanitized findings","Security report"])}<button style="margin-top:16px" onclick="privacy()">View privacy architecture</button></section>
+ <section class="sec"><h2 style="margin-bottom:24px">Detection coverage</h2><div class="grid g3">${["Credentials","Tokens","Personal information","Database connections","Private keys","Sensitive configuration"].map(x=>`<div class="card pad"><b>${x}</b></div>`).join("")}</div></section>
+ <section class="sec"><h2>Evaluation</h2><p class="m" style="margin:8px 0 20px">Throughput benchmarks and labeled test-set model metrics — measured, never invented.</p><button onclick="go('benchmark')">See evaluation</button></section>
+ <section class="sec"><h2 style="margin-bottom:24px">Where it runs</h2><div class="row sp" style="margin-bottom:8px"><code>$ leaklens scan .</code><button class="sm" onclick="navigator.clipboard&&navigator.clipboard.writeText('leaklens scan .');toast('Command copied')">Copy command</button></div><p class="m" style="font-size:13px">Illustrative example — the CLI scans locally and prints masked findings in text, JSON, CSV, SARIF, or HTML.</p><div class="row" style="margin-top:16px">${["CLI","Dashboard","CI/CD"].map(x=>`<span class="sev low">${x}</span>`).join("")}</div></section>
+ <section class="sec" style="text-align:center"><h2 style="font-size:32px">Scan your project before you ship it.</h2><button class="p" style="margin-top:24px" onclick="${goApp}">${S.user?"Scan a Project":"Log in"}</button></section></div>`}
+/* ---------- dashboard ---------- */
+function dashboard(){if(need("dash",()=>window.LeakLensAPI.dashboard()))return hd("Security Overview","Monitor sensitive-data exposure across your projects.",`<button class="p" onclick="go('scan')">Scan a Project</button>`)+loading();
+ const d=S.dash;if(d.__err)return hd("Security Overview","Monitor sensitive-data exposure across your projects.")+errBox(d.__err);
+ if(need("projects",()=>window.LeakLensAPI.projects()))return hd("Security Overview","Monitor sensitive-data exposure across your projects.",`<button class="p" onclick="go('scan')">Scan a Project</button>`)+loading();
+ const sev=d.severity||{},H=sev.HIGH||0,M=sev.MEDIUM||0,L=sev.LOW||0,tot=Math.max(1,H+M+L);
+ const bar=(l,n,c)=>`<div class="cbar"><span style="color:var(--t2);font-weight:500">${l}</span><div class="bar"><i style="width:${Math.round(n*100/tot)}%;background:${c}"></i></div><b>${n}</b></div>`;
+ const pname=id=>{const p=(S.projects||[]).find(p=>p.id===id);return p?p.name:String(id).slice(0,8)};
+ let attn="";
+ if(need("hiopen",()=>window.LeakLensAPI.findings("?status=OPEN&severity=HIGH")))attn=loading();
+ else if(S.hiopen.__err)attn=`<p class="m">Couldn't load high-risk findings.</p>`;
+ else if(!S.hiopen.length)attn=`<p class="s">No open high-risk findings. Good.</p>`;
+ else{const f=S.hiopen[0];attn=`<p class="s">${S.hiopen.length} open high-risk finding${S.hiopen.length>1?"s":""} — newest: <b>${esc(f.category||"")}</b> in <span class="mono">${esc(f.file_path)}</span>.</p><button class="sm" style="margin-top:12px" onclick="S.fdetail=null;go('finding','${esc(String(f.id))}')">Review finding</button>`}
+ let recent="";
+ if(need("recentF",()=>window.LeakLensAPI.findings("")))recent=loading();
+ else if(S.recentF.__err)recent=`<p class="m">Couldn't load recent findings.</p>`;
+ else if(!S.recentF.length)recent=empty("No findings yet","Run your first scan to populate this dashboard.","Scan a Project","scan");
+ else recent=tbl(["Severity","Finding","File","Line","Confidence","Status"],S.recentF.slice(0,5).map(frow).join(""));
+ const scans=(d.recent_scans||[]).map(s=>`<tr class="click" onclick="S.scanDetail=null;S.scanFindings=null;go('scanview','${esc(s.id)}')"><td><b>${esc(pname(s.project_id))}</b></td><td class="mono">${esc(String(s.files_scanned))}</td><td>${esc(String(s.findings_count))}</td><td class="st ${s.status==="COMPLETED"?"resolved":""}">${esc(s.status)}</td><td class="m">${fmtDT(s.created_at)}</td></tr>`).join("");
+ const acts=(d.recent_activity||[]).map(a=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--b)"><div><b>${esc(a.kind)}</b><p class="m" style="font-size:13px">${esc(a.message)}${a.project_id?` · ${esc(pname(a.project_id))}`:""} · ${fmtDT(a.created_at)}</p></div></div>`).join("");
+ return hd("Security Overview","Monitor sensitive-data exposure across your projects.",`<button class="p" onclick="go('scan')">Scan a Project</button>`)
+ +`<div class="grid g4">${metric("Projects",d.projects)}${metric("Scans",d.scans)}${metric("Open findings",d.open)}${metric("High risk",d.high)}</div>
+ <div class="grid g2" style="margin:16px 0"><div class="card pad"><h3 style="margin-bottom:12px">Risk overview</h3>${bar("HIGH",H,"#DF1C1C")+bar("MEDIUM",M,"#B45309")+bar("LOW",L,"#64748B")}</div><div class="card pad"><h3 style="margin-bottom:8px">Needs attention</h3>${attn}</div></div>
+ <h3 style="margin:24px 0 12px">Recent findings</h3>${recent}
+ <h3 style="margin:24px 0 12px">Recent scans</h3>${scans?tbl(["Project","Files","Findings","Status","Date"],scans):empty("No scans yet","Completed scans will appear here.","Scan a Project","scan")}
+ <h3 style="margin:24px 0 12px">Recent activity</h3>${acts?`<div class="card pad">${acts}</div>`:`<p class="m">No activity recorded yet.</p>`}`}
+/* ---------- projects ---------- */
+function projects(){if(need("projects",()=>window.LeakLensAPI.projects()))return hd("Projects","Every project LeakLens has analyzed.",`<button class="p" onclick="modal(newProjectModal())">New Project</button>`)+loading();
+ const p=S.projects;if(p.__err)return hd("Projects","Every project LeakLens has analyzed.")+errBox(p.__err);
+ if(!p.length)return hd("Projects","Every project LeakLens has analyzed.",`<button class="p" onclick="modal(newProjectModal())">New Project</button>`)+empty("No projects yet","Create a project, then run a scan.","New Project","");
+ const rows=p.map(x=>`<tr class="click" onclick="S.projDetail=null;S.projFindings=null;go('project','${esc(x.id)}')"><td><b>${esc(x.name)}</b></td><td class="mono m">${esc(x.path||"")}</td><td class="m">${fmtDT(x.created_at)}</td></tr>`).join("");
+ return hd("Projects","Every project LeakLens has analyzed.",`<button class="p" onclick="modal(newProjectModal())">New Project</button>`)+tbl(["Project","Path","Created"],rows)}
+function newProjectModal(){return `<h2>New project</h2><p class="m" style="margin:6px 0 14px;font-size:13px">A local folder path, or leave blank and scan from the Scan page.</p><label class="m" style="font-size:13px">Name</label><input type="text" id="npj" style="width:100%;margin:4px 0 12px"><label class="m" style="font-size:13px">Local folder path (optional)</label><input type="text" id="ppj" style="width:100%;margin:4px 0 12px"><div class="row" style="margin-top:8px"><button class="p" onclick="createProject()">Create</button><button onclick="closeM()">Cancel</button></div>`}
+async function createProject(){const n=$("#npj").value.trim(),p=$("#ppj").value.trim();
+ if(!n){toast("Name is required",true);return}
+ try{await window.LeakLensAPI.createProject({name:n,path:p});closeM();S.projects=null;toast("Project created");render()}catch(e){toast(apiErr(e),true)}}
+async function deleteProject(id,name){if(!confirm(`Delete project "${name}" and all its scans and findings?`))return;
+ try{await window.LeakLensAPI.deleteProject(id);invalidateData();toast("Project deleted");go("projects")}catch(e){toast(apiErr(e),true)}}
+function project(){const id=S.arg;
+ if(S.projDetail===null||S.projDetail===undefined||S.projDetail.id!==id){S.projDetail=false;S.projFindings=null;
+  window.LeakLensAPI.project(id).then(v=>{S.projDetail=v;render()}).catch(e=>{S.projDetail={__err:apiErr(e)};render()});
+  window.LeakLensAPI.findings("?project_id="+encodeURIComponent(id)).then(v=>{S.projFindings=v;render()}).catch(e=>{S.projFindings={__err:apiErr(e)};render()});
+  return `<button class="sm" onclick="go('projects')">← Projects</button>`+loading()}
+ const p=S.projDetail;if(p.__err)return `<button class="sm" onclick="go('projects')">← Projects</button>`+errBox(p.__err);
+ const scans=(p.scans||[]).map(s=>`<tr class="click" onclick="S.scanDetail=null;S.scanFindings=null;go('scanview','${esc(s.id)}')"><td class="mono">${esc(String(s.id).slice(0,8))}</td><td class="st ${s.status==="COMPLETED"?"resolved":""}">${esc(s.status)}</td><td class="mono">${esc(String(s.findings_count))}</td><td class="mono">${esc(String(s.files_scanned))}</td></tr>`).join("");
+ let sum=`<p class="m">No findings recorded for this project yet.</p>`,sev="";
+ if(S.projFindings&&!S.projFindings.__err&&S.projFindings.length){const c={high:0,medium:0,low:0};
+  S.projFindings.forEach(f=>{const k=sevCls(f.severity);c[k]=(c[k]||0)+1});
+  sev=`<div class="row" style="margin-top:12px">${sevL("high")}<b>${c.high||0}</b>${sevL("medium")}<b>${c.medium||0}</b>${sevL("low")}<b>${c.low||0}</b></div>`;
+  sum=tbl(["Severity","Finding","File","Line","Confidence","Status"],S.projFindings.slice(0,8).map(frow).join(""))}
+ const pts=(p.risk_trend||[]).slice(-7).map(t=>t.findings);
+ const trend=pts.length>1?(()=>{const mx=Math.max(1,...pts),d=pts.map((v,i)=>`${i*60+10},${100-v*100/mx*.9}`).join(" ");
+  return `<div class="card pad"><h3>Findings across recent scans</h3><svg viewBox="0 0 380 110" style="width:100%;max-height:200px" role="img" aria-label="Findings over recent scans"><polyline points="${d}" fill="none" stroke="#0F172A" stroke-width="2"/></svg><p class="m" style="font-size:13px">Open findings per scan (most recent ${pts.length}).</p></div>`})()
+  :`<div class="card pad"><p class="m">No scan history yet for a trend.</p></div>`;
+ return `<button class="sm" onclick="go('projects')">← Projects</button><div class="hd row sp" style="margin-top:16px"><div><h2>${esc(p.name)}</h2><p class="m mono">${esc(p.path||"no path set")}</p></div><div class="row"><button class="p" onclick="startProjectScan()">Run New Scan</button><button onclick="delCurrentProject()">Delete</button></div></div>
+ <div class="grid g4">${metric("Scans",(p.scans||[]).length)}${metric("Findings",S.projFindings&&!S.projFindings.__err?S.projFindings.length:"…")}${metric("Created",fmtDT(p.created_at))}</div>
+ <div class="tabs" style="margin-top:24px">${["Overview","Findings","Scans"].map(t=>`<button class="tab ${S.ptab===t?"on":""}" onclick="S.ptab='${t}';render()">${t}</button>`).join("")}</div>`
+ +(S.ptab==="Overview"?trend:S.ptab==="Findings"?((S.projFindings&&S.projFindings.__err)?errBox(S.projFindings.__err):(sev+`<div style="margin-top:12px">${sum}</div>`)):scans?tbl(["Scan","Status","Findings","Files"],scans):empty("No scans yet","Run the first scan for this project.","Run New Scan","scan"))}
+function startProjectScan(){const p=S.projDetail;if(!p||p.__err)return;S.scanProj={id:p.id,name:p.name,path:p.path||""};S.upload=p.path?{path:p.path,name:p.name,files:"?",isZip:false}:null;go("scan")}
+function delCurrentProject(){const p=S.projDetail;if(!p||p.__err)return;deleteProject(p.id,p.name)}
+/* ---------- scans history ---------- */
+function scans(){if(need("scans",()=>window.LeakLensAPI.scans()))return hd("Scans","Every recorded scan, newest first.")+loading();
+ const s=S.scans;if(s.__err)return hd("Scans","Every recorded scan, newest first.")+errBox(s.__err);
+ if(need("projects",()=>window.LeakLensAPI.projects()))return hd("Scans","Every recorded scan, newest first.")+loading();
+ const pname=id=>{const p=(S.projects||[]).find(p=>p.id===id);return p?p.name:String(id).slice(0,8)};
+ const list=(S.scProj?s.filter(x=>x.project_id===S.scProj):s);
+ const opts=[`<option value="">All projects</option>`].concat((S.projects||[]).map(p=>`<option value="${esc(p.id)}" ${S.scProj===p.id?"selected":""}>${esc(p.name)}</option>`)).join("");
+ if(!list.length)return hd("Scans","Every recorded scan, newest first.")+`<div class="row" style="margin-bottom:12px"><select aria-label="Project" onchange="S.scProj=this.value;render()">${opts}</select></div>`+empty("No scans yet","Completed scans will appear here and survive reloads.","Scan a Project","scan");
+ const rows=list.map(x=>`<tr class="click" onclick="S.scanDetail=null;S.scanFindings=null;go('scanview','${esc(x.id)}')"><td><b>${esc(pname(x.project_id))}</b></td><td class="mono">${esc(String(x.id).slice(0,8))}</td><td class="st ${x.status==="COMPLETED"?"resolved":""}">${esc(x.status)}</td><td class="mono">${esc(String(x.files_scanned))}/${esc(String(x.files_discovered))}</td><td>${esc(String(x.findings_count))}</td><td class="mono">${esc(String(x.duration_ms||0))}ms</td></tr>`).join("");
+ return hd("Scans","Every recorded scan, newest first.")+`<div class="row" style="margin-bottom:12px"><select aria-label="Project" onchange="S.scProj=this.value;render()">${opts}</select></div>`+tbl(["Project","Scan","Status","Files","Findings","Duration"],rows)}
+function scanview(){const id=S.arg;
+ if(S.scanDetail===null||S.scanDetail===undefined||S.scanDetail.id!==id){S.scanDetail=false;S.scanFindings=null;
+  window.LeakLensAPI.scan(id).then(v=>{S.scanDetail=v;render()}).catch(e=>{S.scanDetail={__err:apiErr(e)};render()});
+  window.LeakLensAPI.findings("?scan_id="+encodeURIComponent(id)).then(v=>{S.scanFindings=v;render()}).catch(e=>{S.scanFindings={__err:apiErr(e)};render()});
+  return `<button class="sm" onclick="go('scans')">← Scans</button>`+loading()}
+ const m=S.scanDetail;if(m.__err)return `<button class="sm" onclick="go('scans')">← Scans</button>`+errBox(m.__err);
+ const fl=S.scanFindings;
+ const body=(!fl||fl.__err)?errBox(fl?fl.__err:"Couldn't load findings"):(!fl.length?empty("No findings in this scan","Nothing above the severity threshold was found.",null,null):tbl(["Severity","Finding","File","Line","Confidence","Status"],ftableRows(fl)));
+ return `<button class="sm" onclick="go('scans')">← Scans</button><div class="hd row sp" style="margin-top:16px"><div><h2>Scan <span class="mono">${esc(String(m.id).slice(0,12))}</span></h2><p class="m">${esc(m.status)} · ${esc(String(m.files_scanned))}/${esc(String(m.files_discovered))} files · ${esc(String(m.findings_count))} findings · ${esc(String(m.duration_ms||0))}ms${m.error?` · error: ${esc(m.error)}`:""}</p></div><div class="row"><button class="sm" onclick="genReport('${esc(m.project_id)}','${esc(m.id)}','json')">JSON report</button><button class="sm" onclick="go('reports')">All reports</button></div></div>${body}`}
+/* ---------- scan (upload / folder / options) ---------- */
+function scanOptState(def){if(!S.scanOpt)S.scanOpt={ml:def.ml_enabled!=="0",docs:def.include_docs_default!=="0",tests:def.include_tests_default!=="0",sev:def.severity_default||"low",excl:""};return S.scanOpt}
+function scan(){if(need("settings",()=>window.LeakLensAPI.settings()))return hd("Scan a Project","Analyze a project locally for potential sensitive-data exposure.")+loading();
+ const st=S.settings;if(st.__err)return hd("Scan a Project","Analyze a project locally for potential sensitive-data exposure.")+errBox(st.__err);
+ const o=scanOptState(st);
+ const sel=S.upload?`<p class="s" style="margin-top:12px;font-size:13px">Selected: <b class="mono">${esc(S.upload.name)}</b> <span class="m">(${esc(String(S.upload.files))} files)</span> <button class="sm" onclick="S.upload=null;S.scanProj=null;render()">Clear</button></p>`:"";
+ const into=S.scanProj?`<p class="s" style="font-size:13px">Scanning into existing project <b>${esc(S.scanProj.name)}</b> <button class="sm" onclick="S.scanProj=null;render()">Use a new project instead</button></p>`:"";
+ return hd("Scan a Project","Analyze a project locally for potential sensitive-data exposure.")
+ +into+`<div class="drop" id="dz" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="event.preventDefault();this.classList.remove('over');dropZip(event)"><h3>Drop project ZIP here</h3><p class="m" style="margin:6px 0 16px">or select a ZIP, or use a local folder below</p><div class="row" style="justify-content:center"><button onclick="document.getElementById('zipf').click()">Select ZIP</button><input type="file" id="zipf" accept=".zip,application/zip" style="display:none" onchange="uploadZipFile(this.files[0]);this.value=''"></div>${sel}</div>
+ <div class="card pad" style="margin-top:16px"><h3 style="margin-bottom:8px">Local folder</h3><div class="row"><input type="text" id="folderpath" placeholder="e.g. C:\\projects\\myapp" style="flex:1;min-width:240px" value="${S.upload&&!S.upload.isZip?esc(S.upload.path):""}"><button onclick="useFolder()">Use this folder</button></div><p class="m" style="margin-top:8px;font-size:13px">The backend runs on this device, so the folder is scanned locally. Nothing is uploaded.</p></div>
+ <div class="grid g2" style="margin-top:16px"><div class="card pad"><h3 style="margin-bottom:8px">Scan options</h3>
+ <label class="row" style="padding:4px 0"><input type="checkbox" ${o.ml?"checked":""} onchange="S.scanOpt.ml=this.checked?1:0"> Use ML context scoring</label>
+ <label class="row" style="padding:4px 0"><input type="checkbox" ${o.docs?"checked":""} onchange="S.scanOpt.docs=this.checked?1:0"> Include documentation files</label>
+ <label class="row" style="padding:4px 0"><input type="checkbox" ${o.tests?"checked":""} onchange="S.scanOpt.tests=this.checked?1:0"> Include test files</label>
+ <p class="m" style="margin:12px 0 4px;font-size:13px">Minimum severity persisted</p><select aria-label="Minimum severity" onchange="S.scanOpt.sev=this.value">${["low","medium","high"].map(x=>`<option ${o.sev===x?"selected":""} value="${x}">${x[0].toUpperCase()+x.slice(1)}</option>`).join("")}</select></div>
+ <div class="card pad"><h3 style="margin-bottom:8px">Exclusions</h3><input type="text" id="excl" placeholder="node_modules, dist (blank = defaults)" style="width:100%" value="${esc(o.excl)}" onchange="S.scanOpt.excl=this.value"><p class="m" style="margin-top:8px;font-size:13px">Comma-separated directory names to skip, in addition to the built-in list (.git, venv, build, …). Git history is not scanned.</p></div></div>
+ <button class="p" style="margin-top:24px" onclick="startScan()">Start Local Scan</button>`}
+async function dropZip(e){const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(!f)return;if(!/\.zip$/i.test(f.name)){toast("Only .zip files are supported",true);return}await uploadZipFile(f)}
+async function uploadZipFile(f){if(!f)return;toast("Uploading "+f.name+"…");try{const u=await window.LeakLensAPI.uploadZip(f);S.upload={path:u.path,name:u.name||f.name,files:u.files_extracted,isZip:true,upload_id:u.upload_id};S.scanProj=null;toast("Extracted "+u.files_extracted+" files"+(u.files_skipped?" ("+u.files_skipped+" skipped)":""));render()}catch(e){toast(apiErr(e),true)}}
+function useFolder(){const v=(document.getElementById("folderpath").value||"").trim();if(!v){toast("Paste a local folder path first",true);return}const nm=v.split(/[\\/]/).filter(Boolean).pop()||"local-project";S.upload={path:v,name:nm,files:"?",isZip:false};S.scanProj=null;toast("Folder selected");render()}
+async function startScan(){if(!S.upload){toast("Select a ZIP or a local folder first",true);return}
+ scanOptState({});const o=S.scanOpt;
+ const excl=(o.excl||"").split(",").map(s=>s.trim()).filter(Boolean);
+ try{
+  let pid,name;
+  if(S.scanProj&&S.scanProj.id){pid=S.scanProj.id;name=S.scanProj.name}
+  else{toast("Creating project…");const nm=S.upload.name.replace(/\.zip$/i,"");const p=await window.LeakLensAPI.createProject({name:nm,path:S.upload.path});pid=p.id;name=nm}
+  S.projId=pid;S.liveName=name;
+  const s=await window.LeakLensAPI.startScan({project_id:pid,path:S.upload.path,use_ml:!!o.ml,include_docs:!!o.docs,include_tests:!!o.tests,severity_threshold:o.sev,excludes:excl});
+  S.scanId=s.scan_id;S.live=[];S.scanMeta=null;S.pct=0;S.scanDetail=null;S.scanFindings=null;go("progress");pollScan();
+ }catch(e){toast(apiErr(e),true)}}
+async function pollScan(){clearInterval(S.tm);const tick=async()=>{if(S.route!=="progress")return;
+ try{const pr=await window.LeakLensAPI.scanProgress(S.scanId);S.scanMeta=pr;S.pct=pr.percent||0;
+  if(pr.status==="COMPLETED"){clearInterval(S.tm);
+   const fl=await window.LeakLensAPI.findings("?project_id="+encodeURIComponent(S.projId));
+   S.live=Array.isArray(fl)?fl:[];invalidateData();
+   go("results");toast("Scan complete: "+S.live.length+" findings");return}
+  if(pr.status==="CANCELLED"){clearInterval(S.tm);toast("Scan cancelled");go("scan");return}
+  if(pr.status==="FAILED"){clearInterval(S.tm);
+   try{const det=await window.LeakLensAPI.scan(S.scanId);S.scanDetail=det}catch(e){}
+   toast("Scan failed",true);render();return}
+  render()}catch(e){clearInterval(S.tm);toast(apiErr(e),true)}};await tick();S.tm=setInterval(tick,1500)}
+async function cancelLiveScan(){clearInterval(S.tm);try{if(S.scanId)await window.LeakLensAPI.cancelScan(S.scanId)}catch(e){}go("scan")}
+function progress(){const st=["File discovery","Pattern detection","Entropy analysis","Context analysis","Risk classification","Report generation"],a=Math.min(5,Math.floor(S.pct/17));
+ const m=S.scanMeta,d=m?m.files_scanned:0,t=m?m.files_discovered:0,cf=m?(m.candidates||0):0;
+ if(m&&m.status==="FAILED"){const det=S.scanDetail;
+  return hd("Scan failed",(S.liveName||"") )+`<div class="card pad"><h3>Scan failed</h3><p class="m" style="margin:6px 0 12px">${esc((det&&det.error)||"Unknown error")}</p><div class="row"><button class="p sm" onclick="go('scan')">Back to Scan</button><button class="sm" onclick="go('scans')">View history</button></div></div>`}
+ return hd("Scanning project…",(S.liveName||"")+" · local analysis")+`<div class="card pad"><div class="row sp"><b class="mono" style="font-size:22px">${Math.round(S.pct)}%</b><span class="mono m">${d} / ${t} files · ${cf} candidates</span></div><div class="bar" style="margin:12px 0"><i style="width:${S.pct}%"></i></div><p class="m" style="font-size:13px">Stage: ${esc((m&&(m.stage||m.status))||"starting")}</p></div>
+ <div class="card pad" style="margin-top:16px"><ul class="steps" style="margin:0;padding:0">${st.map((s,i)=>`<li class="${i<a?"d":i==a?"a":""}">${i<a?"✓":i==a?"●":"○"} ${s}</li>`).join("")}</ul></div><button style="margin-top:16px" onclick="cancelLiveScan()">Cancel scan</button>`}
+function results(){const histBtn=S.scanId?`<button onclick="S.scanDetail=null;S.scanFindings=null;go('scanview','${esc(String(S.scanId))}')">Open in history</button>`:"";
+ if(!S.live.length)return hd("Scan complete",S.liveName||"")+empty("No findings in this scan","Nothing above the minimum severity was found.",null,null)+`<div class="row" style="margin-top:16px">${histBtn}<button class="p" onclick="go('scan')">New Scan</button></div>`;
+ const c={high:0,medium:0,low:0};S.live.forEach(f=>{const k=sevCls(f.severity);c[k]=(c[k]||0)+1});
+ const rows=S.live.map(frow).join("");
+ return hd("Scan complete",S.liveName||"")+`<div class="card pad row sp"><div><div class="metric"><span class="n">${S.live.length} findings</span></div><p class="m mono">${S.scanMeta?S.scanMeta.files_scanned+" files scanned":""} · live backend results</p></div><div class="row">${sevL("high")}<b>${c.high||0}</b>${sevL("medium")}<b>${c.medium||0}</b>${sevL("low")}<b>${c.low||0}</b></div></div><h3 style="margin:24px 0 12px">Findings</h3>${tbl(["Severity","Finding","File","Line","Confidence","Status"],rows)}<div class="row" style="margin-top:16px"><button onclick="S.scanDetail=null;S.scanFindings=null;go('scanview','${esc(String(S.scanId||""))}')">Open in history</button><button class="p" onclick="go('scan')">New Scan</button></div>`}
+/* ---------- findings ---------- */
+function findingsQuery(){const p=[];
+ if(S.fproj)p.push("project_id="+encodeURIComponent(S.fproj));
+ if(S.fsev!=="all")p.push("severity="+S.fsev.toUpperCase());
+ if(S.fstat!=="all")p.push("status="+STMREV[S.fstat]);
+ if(S.q)p.push("q="+encodeURIComponent(S.q));
+ if(S.fconf!==""&&S.fconf!==null)p.push("confidence_min="+encodeURIComponent(S.fconf));
+ return p.length?"?"+p.join("&"):""}
+function findings(){if(need("projects",()=>window.LeakLensAPI.projects()))return hd("Findings","Review and manage potential exposure.")+loading();
+ const key="fq:"+findingsQuery();
+ if(S.findings===null||S.findings===undefined||S.findings._q!==key){S.findings=false;
+  window.LeakLensAPI.findings(findingsQuery()).then(v=>{v._q=key;S.findings=v;S.fpg=0;render()}).catch(e=>{S.findings={__err:apiErr(e),_q:key};render()});
+  return hd("Findings","Review and manage potential exposure.")+loading()}
+ const fl=S.findings;if(fl.__err)return hd("Findings","Review and manage potential exposure.")+errBox(fl.__err);
+ const opts=[`<option value="">All projects</option>`].concat((S.projects||[]).map(p=>`<option value="${esc(p.id)}" ${S.fproj===p.id?"selected":""}>${esc(p.name)}</option>`)).join("");
+ const filt=`<div class="row" style="margin-bottom:12px"><input type="text" placeholder="Search file, detector, value" aria-label="Search findings" value="${esc(S.q)}" onkeydown="if(event.key==='Enter'){S.q=this.value;S.findings=null;render()}"><select aria-label="Project" onchange="S.fproj=this.value;S.findings=null;render()">${opts}</select><select aria-label="Severity" onchange="S.fsev=this.value;S.findings=null;render()">${["all","high","medium","low"].map(x=>`<option ${S.fsev===x?"selected":""} value="${x}">${x==="all"?"All severities":x[0].toUpperCase()+x.slice(1)}</option>`).join("")}</select><select aria-label="Status" onchange="S.fstat=this.value;S.findings=null;render()">${[["all","All statuses"],["open","Open"],["resolved","Resolved"],["ignored","Ignored"],["fp","False positive"]].map(x=>`<option value="${x[0]}" ${S.fstat===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select><input type="number" id="fconf" placeholder="Min conf %" aria-label="Minimum confidence percent" min="0" max="100" style="width:130px" value="${esc(S.fconf)}" onchange="S.fconf=this.value===''? '':Math.max(0,Math.min(100,Number(this.value)))/100;S.findings=null;render()"></div>`;
+ if(!fl.length)return hd("Findings","Review and manage potential exposure.")+filt+empty("No findings match","Adjust the filters, or run a scan.",null,null);
+ const pages=Math.max(1,Math.ceil(fl.length/PAGE)),pg=Math.min(S.fpg,pages-1);S.fpg=pg;
+ const rows=fl.slice(pg*PAGE,pg*PAGE+PAGE);
+ const body=rows.map(f=>`<tr class="click" onclick="S.fdetail=null;go('finding','${esc(String(f.id))}')"><td onclick="event.stopPropagation()"><input type="checkbox" aria-label="Select finding" ${S.findSel.has(String(f.id))?"checked":""} onchange="this.checked?S.findSel.add('${esc(String(f.id))}'):S.findSel.delete('${esc(String(f.id))}');render()"></td><td>${sevL(f.severity)}</td><td>${esc(f.category||"")}</td><td class="mono">${esc(f.file_path)}:${esc(String(f.line_number))}</td><td>${confPct(f.confidence)}%</td><td>${stL(STM[f.status]||"open")}</td></tr>`).join("");
+ const bulk=S.findSel.size?`<div class="row" style="margin-bottom:12px"><b>${S.findSel.size} selected</b><button class="sm" onclick="bulkSet('RESOLVED')">Mark resolved</button><button class="sm" onclick="bulkSet('IGNORED')">Ignore</button><button class="sm" onclick="bulkSet('FALSE_POSITIVE')">False positive</button></div>`:"";
+ const pager=pages>1?`<div class="row" style="margin-top:12px"><button class="sm" ${pg===0?"disabled":""} onclick="S.fpg--;render()">← Prev</button><span class="m">Page ${pg+1} of ${pages} · ${fl.length} findings</span><button class="sm" ${pg>=pages-1?"disabled":""} onclick="S.fpg++;render()">Next →</button></div>`:`<p class="m" style="margin-top:12px;font-size:13px">${fl.length} findings</p>`;
+ return hd("Findings","Review and manage potential exposure.")+filt+bulk+tbl(["","Severity","Type","Location","Confidence","Status"],body)+pager}
+async function bulkSet(st){if(!S.findSel.size)return;try{const r=await window.LeakLensAPI.bulkUpdate(Array.from(S.findSel),st);S.findSel.clear();invalidateData();toast(r.updated+" findings updated");render()}catch(e){toast(apiErr(e),true)}}
+function finding(){const id=S.arg;
+ if(!S.fdetail||S.fdetail.id!==id){S.fdetail=false;
+  window.LeakLensAPI.finding(id).then(v=>{S.fdetail=v;render()}).catch(e=>{S.fdetail={__err:apiErr(e)};render()});
+  return `<button class="sm" onclick="go('findings')">← Findings</button>`+loading()}
+ const f=S.fdetail;if(f.__err)return `<button class="sm" onclick="go('findings')">← Findings</button>`+errBox(f.__err);
+ return `<button class="sm" onclick="go('findings')">← Findings</button><div class="hd row sp" style="margin-top:16px"><div><h2>${esc(f.category||f.detector_id||"Finding")}</h2><div class="row" style="margin-top:8px">${sevL(f.severity)}<b>${esc(String(f.severity||"").toUpperCase())} RISK</b><span class="m">${confPct(f.confidence)}% confidence</span>${stL(STM[f.status]||"open")}</div></div><div class="row"><button class="p" onclick="setFSt('${esc(String(f.id))}','RESOLVED')">Mark as Resolved</button><button onclick="setFSt('${esc(String(f.id))}','FALSE_POSITIVE')">Mark as False Positive</button><button onclick="setFSt('${esc(String(f.id))}','IGNORED')">Ignore</button></div></div>
+ <div class="grid g3"><div class="card pad"><p class="m" style="font-size:13px">Detector</p><b class="mono">${esc(f.detector_id||"")}</b></div><div class="card pad"><p class="m" style="font-size:13px">File</p><b class="mono">${esc(f.file_path||"")}</b></div><div class="card pad"><p class="m" style="font-size:13px">Line</p><b class="mono">${esc(String(f.line_number))}${f.column?":"+esc(String(f.column)):""}</b></div></div>
+ <h3 style="margin:24px 0 10px">Masked value</h3><div class="code"><div><b>${esc(String(f.line_number))}</b>${esc(f.masked_value||"")}</div></div><p class="m" style="font-size:13px;margin-top:6px">The sensitive value is masked server-side. LeakLens does not display or store it.</p>
+ <div class="grid g2" style="margin-top:24px"><div class="card pad"><h3 style="margin-bottom:8px">Evidence</h3>${(f.evidence||[]).map(s=>`<p class="s">✓ ${esc(s)}</p>`).join("")||'<p class="m">No evidence recorded.</p>'}</div><div class="card pad"><h3 style="margin-bottom:8px">Recommended action</h3><p class="s">${esc(f.recommendation||"Remove the value from source, rotate it, and use a secrets manager.")}</p>${f.context_type?`<p class="m" style="margin-top:8px;font-size:13px">Context: ${esc(f.context_type)}</p>`:""}</div></div>`}
+async function setFSt(id,st){try{const f=await window.LeakLensAPI.updateFinding(id,st);S.fdetail=f;invalidateData();toast({RESOLVED:"Marked as resolved",FALSE_POSITIVE:"Marked as false positive",IGNORED:"Finding ignored"}[st]||"Updated");render()}catch(e){toast(apiErr(e),true)}}
+/* ---------- reports ---------- */
+function reports(){if(need("projects",()=>window.LeakLensAPI.projects()))return hd("Reports","Sanitized security reports. Raw sensitive values are never included.")+loading();
+ if(need("reports",()=>window.LeakLensAPI.reports()))return hd("Reports","Sanitized security reports. Raw sensitive values are never included.")+loading();
+ const rp=S.reports;if(rp.__err)return hd("Reports","Sanitized security reports. Raw sensitive values are never included.")+errBox(rp.__err);
+ const pname=id=>{const p=(S.projects||[]).find(p=>p.id===id);return p?p.name:String(id).slice(0,8)};
+ if(S.repProj&&!S.repScans){S.repScans=false;
+  window.LeakLensAPI.scans(S.repProj).then(v=>{S.repScans=v;render()}).catch(e=>{S.repScans={__err:apiErr(e)};render()})}
+ const projOpts=[`<option value="">Select project…</option>`].concat((S.projects||[]).map(p=>`<option value="${esc(p.id)}" ${S.repProj===p.id?"selected":""}>${esc(p.name)}</option>`)).join("");
+ const scanOpts=S.repScans&&!S.repScans.__err?S.repScans.filter(s=>s.status==="COMPLETED").map(s=>`<option value="${esc(s.id)}" ${S.repScan===s.id?"selected":""}>${esc(String(s.id).slice(0,8))} · ${s.findings_count} findings</option>`).join(""):"";
+ const gen=`<div class="card pad"><h3 style="margin-bottom:8px">Generate report</h3><div class="row"><select aria-label="Project" onchange="S.repProj=this.value;S.repScan='';S.repScans=null;render()">${projOpts}</select><select aria-label="Scan" ${!S.repProj?"disabled":""} onchange="S.repScan=this.value;render()"><option value="">Select scan…</option>${scanOpts}</select><select aria-label="Format" onchange="S.repFmt=this.value">${["json","csv","sarif","html"].map(x=>`<option ${S.repFmt===x?"selected":""}>${x}</option>`).join("")}</select><button class="p sm" ${S.repScan?"":"disabled"} onclick="genReport('${esc(S.repProj)}','${esc(S.repScan)}',S.repFmt)">Generate</button></div></div>`;
+ if(!rp.length)return hd("Reports","Sanitized security reports. Raw sensitive values are never included.")+gen+`<div style="margin-top:16px">`+empty("No reports yet","Generate a report from a completed scan.",null,null)+`</div>`;
+ const rows=rp.map(r=>`<tr><td class="mono">${esc(String(r.id).slice(0,8))}</td><td><b>${esc(pname(r.project_id))}</b></td><td class="mono">${esc(r.format.toUpperCase())}</td><td class="mono">${r.size_bytes==null?"missing":r.size_bytes+" B"}</td><td class="m">${fmtDT(r.created_at)}</td><td><div class="row"><button class="sm" onclick="dlReport('${esc(r.id)}')">Download</button><button class="sm" onclick="delReport('${esc(r.id)}')">Delete</button></div></td></tr>`).join("");
+ return hd("Reports","Sanitized security reports. Raw sensitive values are never included.")+gen+`<div style="margin-top:16px">`+tbl(["Report","Project","Format","Size","Created",""],rows)+`</div>`}
+async function genReport(pid,sid,fmt){if(!pid||!sid)return;try{toast("Generating "+fmt.toUpperCase()+" report…");const r=await window.LeakLensAPI.createReport({project_id:pid,scan_id:sid,format:fmt});S.reports=null;toast("Report generated");render();dlReport(r.id)}catch(e){toast(apiErr(e),true)}}
+async function dlReport(id){try{const r=await window.LeakLensAPI.downloadReport(id);const b=await r.blob();const cd=r.headers.get("content-disposition")||"";const m=/filename="?([^"]+)"?/.exec(cd);const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=m?m[1]:"leaklens-report";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}catch(e){toast(apiErr(e),true)}}
+async function delReport(id){if(!confirm("Delete this report?"))return;try{await window.LeakLensAPI.deleteReport(id);S.reports=null;toast("Report deleted");render()}catch(e){toast(apiErr(e),true)}}
+/* ---------- benchmark ---------- */
+function benchmark(){if(need("benches",()=>window.LeakLensAPI.benchmarks()))return hd("Evaluation","Throughput benchmarks and labeled model quality — measured, never invented.")+loading();
+ const b=S.benches;if(b.__err)return hd("Evaluation","Throughput benchmarks and labeled model quality — measured, never invented.")+errBox(b.__err);
+ let job="";
+ if(S.benchJob){job=`<div class="card pad" style="margin-bottom:16px"><b>Benchmark running…</b><p class="m mono" style="font-size:13px">job ${esc(S.benchJob)}</p></div>`}
+ const run=`<div class="card pad"><h3 style="margin-bottom:8px">Run throughput benchmark</h3><div class="row"><input type="text" id="benchpath" placeholder="Local path (blank = bundled fixture)" style="flex:1;min-width:240px"><button class="p sm" onclick="runBench()">Run benchmark</button></div><p class="m" style="margin-top:8px;font-size:13px">Scans the target and records files/sec, findings, and severity/detector breakdowns. Runs in the background.</p></div>`;
+ const runs=(b.runs||[]).map(r=>`<tr class="click" onclick="showBench('${esc(r.id)}')"><td class="mono">${esc(r.id)}</td><td class="mono m">${esc((r.target||"").slice(-48))}</td><td class="mono">${esc(String(r.files_scanned))}</td><td>${esc(String(r.findings))}</td><td class="mono">${esc(String(r.duration_s))}s</td><td class="m">${fmtDT(r.finished_at)}</td></tr>`).join("");
+ const runsCard=runs?tbl(["Run","Target","Files","Findings","Duration","Finished"],runs):empty("No benchmark results available yet.","Run your first benchmark to measure scanner throughput.",null,null);
+ let latest="";
+ if(b.latest){const L=b.latest;
+  latest=`<div class="card pad" style="margin-top:16px"><h3 style="margin-bottom:8px">Latest run</h3><div class="grid g4">${metric("Files scanned",L.files_scanned)}${metric("Findings",L.findings)}${metric("Files/sec",L.files_per_sec)}${metric("Duration",L.duration_s+"s")}</div><p class="m mono" style="margin-top:8px;font-size:13px">target: ${esc(L.target||"")}</p></div>`}
+ let model="";
+ const mm=b.model_test_metrics||{};
+ if(mm.f1!==undefined){model=`<div class="card pad" style="margin-top:16px"><h3 style="margin-bottom:4px">Model quality — labeled test set (N=${esc(String(mm.n_test||"?"))})</h3><p class="m" style="font-size:13px;margin-bottom:8px">Controlled synthetic data, not real-world data. Threshold ${esc(String(mm.threshold))}.</p><div class="grid g4">${metric("Precision",Math.round((mm.precision||0)*100)+"%")}${metric("Recall",Math.round((mm.recall||0)*100)+"%")}${metric("F1",Math.round((mm.f1||0)*100)+"%")}${metric("ROC AUC",mm.roc_auc==null?"—":Number(mm.roc_auc).toFixed(3))}</div><p class="m" style="font-size:13px;margin-top:8px">False positives per 1000 rows: ${esc(String(mm.fp_per_1000))} · hard-negative holdout FPR: ${esc(String((mm.hard_negative_holdout||{}).fpr))} (eval-only set).</p></div>`}
+ else model=`<div class="card pad" style="margin-top:16px"><p class="m">No model evaluation artifact yet — run scripts/evaluate_model.py.</p></div>`;
+ let comp="";
+ const mc=b.model_comparison||{},keys=Object.keys(mc);
+ if(keys.length)comp=`<div class="card pad" style="margin-top:16px"><h3 style="margin-bottom:8px">Candidate comparison (validation F1)</h3>${tbl(["Candidate","Val F1 @0.5"],keys.map(k=>`<tr><td class="mono">${esc(k)}</td><td>${esc(String((mc[k]||{}).val_f1_at_0_5??(mc[k]||{}).val_f1_calibrated??"—"))}</td></tr>`).join(""))}</div>`;
+ return hd("Evaluation","Throughput benchmarks and labeled model quality — measured, never invented.")+job+run+`<div style="margin-top:16px">`+runsCard+`</div>`+latest+model+comp}
+async function showBench(id){try{const d=await window.LeakLensAPI.benchmark(id);
+ modal(`<h2>Benchmark <span class="mono">${esc(id)}</span></h2><p class="m mono" style="font-size:13px;margin:6px 0 14px">${esc(d.target||"")}</p><div class="grid g2">${metric("Files scanned",d.files_scanned)}${metric("Findings",d.findings)}${metric("Files/sec",d.files_per_sec)}${metric("MB/sec",d.mb_per_sec)}</div><h3 style="margin:16px 0 8px">By severity</h3><pre class="m mono">${esc(JSON.stringify(d.by_severity||{},null,1))}</pre><h3 style="margin:16px 0 8px">By detector</h3><pre class="m mono">${esc(JSON.stringify(d.by_detector||{},null,1))}</pre><div style="margin-top:16px"><button class="p" onclick="closeM()">Close</button></div>`)}catch(e){toast(apiErr(e),true)}}
+async function runBench(){const p=($("#benchpath")||{}).value||"";
+ try{const r=await window.LeakLensAPI.runBenchmark({path:p});S.benchJob=r.job_id;toast("Benchmark started");render();pollBench()}catch(e){toast(apiErr(e),true)}}
+async function pollBench(){for(let i=0;i<120;i++){await new Promise(r=>setTimeout(r,2000));if(S.route!=="benchmark"||!S.benchJob)return;
+ try{const j=await window.LeakLensAPI.benchmarkJob(S.benchJob);
+  if(j.status==="DONE"){S.benchJob=null;S.benches=null;toast("Benchmark complete");render();return}
+  if(j.status==="FAILED"){S.benchJob=null;toast("Benchmark failed: "+(j.error||"unknown"),true);render();return}}catch(e){}}
+ S.benchJob=null;S.benches=null;render()}
+/* ---------- activity ---------- */
+function activity(){if(need("activity",()=>window.LeakLensAPI.activity()))return hd("Activity","Recent events across projects.")+loading();
+ const a=S.activity;if(a.__err)return hd("Activity","Recent events across projects.")+errBox(a.__err);
+ if(!a.length)return hd("Activity","Recent events across projects.")+empty("No activity yet","Scans, finding updates, and reports will appear here.",null,null);
+ return hd("Activity","Recent events across projects.")+`<div class="card pad">${a.map(x=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--b)"><div><b>${esc(x.kind)}</b><p class="m" style="font-size:13px">${esc(x.message)} · ${fmtDT(x.created_at)}</p></div></div>`).join("")}</div>`}
+/* ---------- settings ---------- */
+const KNOWN_SETTINGS=[
+ ["ml_enabled","bool","Use ML context scoring for new scans (default)"],
+ ["include_docs_default","bool","Include documentation files in new scans (default)"],
+ ["include_tests_default","bool","Include test files in new scans (default)"],
+ ["severity_default","sev","Default minimum severity for new scans"],
+ ["default_excludes","text","Directory names to skip, comma-separated (blank = built-in list)"],
+ ["log_level","loglevel","Backend log level (applies after restart)"]];
+const SET_DEFAULTS={ml_enabled:"1",include_docs_default:"1",include_tests_default:"1",severity_default:"low",default_excludes:"",log_level:"INFO"};
+function settings(){if(need("settings",()=>window.LeakLensAPI.settings()))return hd("Settings","Detection defaults and scan exclusions.")+loading();
+ const s=S.settings;if(s.__err)return hd("Settings","Detection defaults and scan exclusions.")+errBox(s.__err);
+ const val=k=>(s[k]!==undefined&&s[k]!==null&&s[k]!=="")?s[k]:SET_DEFAULTS[k];
+ const ctl=kv=>{const k=kv[0],kind=SPEC_KIND[k],v=val(k);
+  if(kind==="bool")return `<label class="row sp" style="padding:8px 0;border-bottom:1px solid var(--b)"><span>${esc(kv[1])}</span><input type="checkbox" role="switch" data-sk="${k}" ${v==="1"?"checked":""}></label>`;
+  if(kind==="sev")return `<label class="row sp" style="padding:8px 0;border-bottom:1px solid var(--b)"><span>${esc(kv[1])}</span><select data-sk="${k}">${["low","medium","high"].map(x=>`<option ${v===x?"selected":""}>${x}</option>`).join("")}</select></label>`;
+  if(kind==="loglevel")return `<label class="row sp" style="padding:8px 0;border-bottom:1px solid var(--b)"><span>${esc(kv[1])}</span><select data-sk="${k}">${["DEBUG","INFO","WARNING","ERROR"].map(x=>`<option ${v===x?"selected":""}>${x}</option>`).join("")}</select></label>`;
+  return `<div style="padding:8px 0;border-bottom:1px solid var(--b)"><p style="margin-bottom:4px">${esc(kv[1])}</p><input type="text" data-sk="${k}" style="width:100%" value="${esc(v)}"></div>`};
+ return hd("Settings","Detection defaults and scan exclusions.",`<button class="p" onclick="saveSettings()">Save settings</button>`)
+ +`<div class="card pad" style="margin-bottom:16px"><h3 style="margin-bottom:8px">Scan defaults</h3>${KNOWN_SETTINGS.map(ctl).join("")}</div>`
+ +`<div class="card pad" style="margin-bottom:16px"><h3 style="margin-bottom:8px">Fixed privacy guarantees</h3>
+ <div class="row sp" style="padding:8px 0;border-bottom:1px solid var(--b)"><span>Local processing</span><span class="st resolved">Always ON</span></div>
+ <div class="row sp" style="padding:8px 0;border-bottom:1px solid var(--b)"><span>Store raw sensitive values</span><span class="st">Always OFF (locked)</span></div>
+ <div class="row sp" style="padding:8px 0"><span>Cloud analysis</span><span class="st">Not available — local-first</span></div></div>`}
+const SPEC_KIND={};KNOWN_SETTINGS.forEach(k=>{SPEC_KIND[k[0]]=k[1]});
+async function saveSettings(){const body={};
+ document.querySelectorAll("[data-sk]").forEach(el=>{body[el.getAttribute("data-sk")]=el.type==="checkbox"?(el.checked?"1":"0"):el.value});
+ try{await window.LeakLensAPI.saveSettings(body);S.settings=null;S.scanOpt=null;toast("Settings saved");render()}catch(e){toast(apiErr(e),true)}}
+/* ---------- render ---------- */
+const APP_ROUTES=["dashboard","projects","project","scans","scanview","scan","progress","results","findings","finding","reports","benchmark","activity","settings"];
+const VIEWS={landing:landing,login:loginView,setup:setupView,dashboard:dashboard,projects:projects,project:project,scans:scans,scanview:scanview,scan:scan,progress:progress,results:results,findings:findings,finding:finding,reports:reports,benchmark:benchmark,activity:activity,settings:settings};
+function render(){const r=S.route;const y=(window.scrollY||0);
+ if(APP_ROUTES.includes(r)&&!S.user){$("#root").innerHTML=loginView();scrollTo(0,0);return}
+ const v=VIEWS[r]||landing;
+ try{$("#root").innerHTML=r==="landing"?v():shell(v())}catch(e){$("#root").innerHTML=shell(errBox("UI error: "+(e&&e.message)))}
+ scrollTo(0,y)}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
+boot();
+</script></body></html>

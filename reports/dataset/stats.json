@@ -1,0 +1,62 @@
+{
+  "train": {
+    "rows": 1505,
+    "positives": 1351,
+    "labels": {
+      "TRUE_PII": 251,
+      "TRUE_SECRET": 1100,
+      "DOCUMENTATION": 22,
+      "BENIGN_CONFIG": 66,
+      "FALSE_POSITIVE": 22,
+      "PLACEHOLDER": 22,
+      "TEST_SECRET": 22
+    },
+    "categories": {
+      "PII_EMAIL": 120,
+      "GITHUB_TOKEN": 131,
+      "PASSWORD": 132,
+      "PII_PHONE": 131,
+      "GENERIC_SECRET": 154,
+      "API_KEY": 131,
+      "AWS_CREDENTIAL": 152,
+      "DATABASE_CREDENTIAL": 160,
+      "PRIVATE_KEY": 22,
+      "JWT": 181,
+      "STRIPE_SECRET": 191
+    }
+  },
+  "validation": {
+    "rows": 160,
+    "positives": 138,
+    "labels": {
+      "TRUE_PII": 52,
+      "TRUE_SECRET": 86,
+      "BENIGN_HIGH_ENTROPY": 22
+    },
+    "categories": {
+      "PII_PHONE": 30,
+      "PASSWORD": 30,
+      "API_KEY": 29,
+      "GITHUB_TOKEN": 27,
+      "PII_EMAIL": 22,
+      "GENERIC_SECRET": 22
+    }
+  },
+  "test": {
+    "rows": 162,
+    "positives": 140,
+    "labels": {
+      "TRUE_PII": 59,
+      "TRUE_SECRET": 81,
+      "EXAMPLE": 22
+    },
+    "categories": {
+      "PII_EMAIL": 31,
+      "GITHUB_TOKEN": 27,
+      "API_KEY": 30,
+      "PII_PHONE": 28,
+      "PASSWORD": 24,
+      "GENERIC_SECRET": 22
+    }
+  }
+}

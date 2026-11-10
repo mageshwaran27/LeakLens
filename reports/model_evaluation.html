@@ -1,0 +1,188 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'><title>Model evaluation</title></head><body><h1>Model evaluation — leaklens-context-v1</h1><pre>{
+  &quot;model&quot;: &quot;leaklens-context-v1&quot;,
+  &quot;algorithm&quot;: &quot;B-charngram-logreg&quot;,
+  &quot;threshold&quot;: 0.2,
+  &quot;n_test&quot;: 31378,
+  &quot;positives&quot;: 15224,
+  &quot;negatives&quot;: 16154,
+  &quot;precision&quot;: 0.8897906374970596,
+  &quot;recall&quot;: 0.9938255386232265,
+  &quot;f1&quot;: 0.9389350875015514,
+  &quot;roc_auc&quot;: 0.9555389547049481,
+  &quot;pr_auc&quot;: 0.9172925219096697,
+  &quot;confusion_matrix&quot;: {
+    &quot;tp&quot;: 15130,
+    &quot;fp&quot;: 1874,
+    &quot;tn&quot;: 14280,
+    &quot;fn&quot;: 94
+  },
+  &quot;fp_per_1000&quot;: 59.72,
+  &quot;hard_negative_holdout&quot;: {
+    &quot;rows_scored&quot;: 10000,
+    &quot;fpr&quot;: 0.0287,
+    &quot;eval_only&quot;: true
+  },
+  &quot;per_secret_type_recall&quot;: {
+    &quot;API_KEY&quot;: {
+      &quot;n&quot;: 1111,
+      &quot;recall&quot;: 0.9442
+    },
+    &quot;AWS_CREDENTIAL&quot;: {
+      &quot;n&quot;: 1512,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;AZURE_CREDENTIAL&quot;: {
+      &quot;n&quot;: 1229,
+      &quot;recall&quot;: 0.9992
+    },
+    &quot;BEARER_TOKEN&quot;: {
+      &quot;n&quot;: 896,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;DATABASE_CREDENTIAL&quot;: {
+      &quot;n&quot;: 1762,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;GITHUB_TOKEN&quot;: {
+      &quot;n&quot;: 1538,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;GOOGLE_CREDENTIAL&quot;: {
+      &quot;n&quot;: 1205,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;JWT&quot;: {
+      &quot;n&quot;: 1249,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;PASSWORD&quot;: {
+      &quot;n&quot;: 1085,
+      &quot;recall&quot;: 0.9714
+    },
+    &quot;PII_CREDIT_CARD&quot;: {
+      &quot;n&quot;: 175,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;PII_EMAIL&quot;: {
+      &quot;n&quot;: 298,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;PII_IP&quot;: {
+      &quot;n&quot;: 157,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;PII_PHONE&quot;: {
+      &quot;n&quot;: 290,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;PRIVATE_KEY&quot;: {
+      &quot;n&quot;: 956,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;SLACK_TOKEN&quot;: {
+      &quot;n&quot;: 909,
+      &quot;recall&quot;: 1.0
+    },
+    &quot;STRIPE_SECRET&quot;: {
+      &quot;n&quot;: 852,
+      &quot;recall&quot;: 1.0
+    }
+  },
+  &quot;label_schema&quot;: &quot;contains_secret (v2)&quot;,
+  &quot;threshold_sweep&quot;: [
+    {
+      &quot;threshold&quot;: 0.3,
+      &quot;precision&quot;: 0.8928656220322887,
+      &quot;recall&quot;: 0.9881108775617446,
+      &quot;f1&quot;: 0.9380768271389374,
+      &quot;fpr&quot;: 0.11173703107589451,
+      &quot;fnr&quot;: 0.011889122438255387,
+      &quot;tp&quot;: 15043,
+      &quot;fp&quot;: 1805,
+      &quot;tn&quot;: 14349,
+      &quot;fn&quot;: 181
+    },
+    {
+      &quot;threshold&quot;: 0.4,
+      &quot;precision&quot;: 0.8957584471603163,
+      &quot;recall&quot;: 0.9821334734629532,
+      &quot;f1&quot;: 0.9369595187366838,
+      &quot;fpr&quot;: 0.1077132598737155,
+      &quot;fnr&quot;: 0.01786652653704677,
+      &quot;tp&quot;: 14952,
+      &quot;fp&quot;: 1740,
+      &quot;tn&quot;: 14414,
+      &quot;fn&quot;: 272
+    },
+    {
+      &quot;threshold&quot;: 0.5,
+      &quot;precision&quot;: 0.8985691766703043,
+      &quot;recall&quot;: 0.9735286389910668,
+      &quot;f1&quot;: 0.9345482060659562,
+      &quot;fpr&quot;: 0.10356568032685402,
+      &quot;fnr&quot;: 0.026471361008933263,
+      &quot;tp&quot;: 14821,
+      &quot;fp&quot;: 1673,
+      &quot;tn&quot;: 14481,
+      &quot;fn&quot;: 403
+    },
+    {
+      &quot;threshold&quot;: 0.6,
+      &quot;precision&quot;: 0.901774710377126,
+      &quot;recall&quot;: 0.961245401996847,
+      &quot;f1&quot;: 0.9305608546356352,
+      &quot;fpr&quot;: 0.09867525071189798,
+      &quot;fnr&quot;: 0.03875459800315292,
+      &quot;tp&quot;: 14634,
+      &quot;fp&quot;: 1594,
+      &quot;tn&quot;: 14560,
+      &quot;fn&quot;: 590
+    },
+    {
+      &quot;threshold&quot;: 0.7,
+      &quot;precision&quot;: 0.9061330627259466,
+      &quot;recall&quot;: 0.9384524435102469,
+      &quot;f1&quot;: 0.9220096156948792,
+      &quot;fpr&quot;: 0.09161817506499938,
+      &quot;fnr&quot;: 0.06154755648975302,
+      &quot;tp&quot;: 14287,
+      &quot;fp&quot;: 1480,
+      &quot;tn&quot;: 14674,
+      &quot;fn&quot;: 937
+    },
+    {
+      &quot;threshold&quot;: 0.8,
+      &quot;precision&quot;: 0.9114808652246256,
+      &quot;recall&quot;: 0.8995664739884393,
+      &quot;f1&quot;: 0.9054844788257463,
+      &quot;fpr&quot;: 0.08233254921381701,
+      &quot;fnr&quot;: 0.10043352601156069,
+      &quot;tp&quot;: 13695,
+      &quot;fp&quot;: 1330,
+      &quot;tn&quot;: 14824,
+      &quot;fn&quot;: 1529
+    },
+    {
+      &quot;threshold&quot;: 0.9,
+      &quot;precision&quot;: 0.9159435599486908,
+      &quot;recall&quot;: 0.7973594324750394,
+      &quot;f1&quot;: 0.8525476700495136,
+      &quot;fpr&quot;: 0.0689612479881144,
+      &quot;fnr&quot;: 0.2026405675249606,
+      &quot;tp&quot;: 12139,
+      &quot;fp&quot;: 1114,
+      &quot;tn&quot;: 15040,
+      &quot;fn&quot;: 3085
+    }
+  ],
+  &quot;context_labels_test&quot;: {
+    &quot;FALSE_POSITIVE&quot;: 8159,
+    &quot;EXAMPLE_SECRET&quot;: 1313,
+    &quot;REAL_SECRET&quot;: 15224,
+    &quot;DOCUMENTATION_EXAMPLE&quot;: 2079,
+    &quot;PLACEHOLDER&quot;: 655,
+    &quot;TEST_SECRET&quot;: 3234,
+    &quot;HIGH_ENTROPY_NON_SECRET&quot;: 714
+  },
+  &quot;note&quot;: &quot;Measured on controlled synthetic test split (leaklens-synthetic-v2), not real-world data.&quot;
+}</pre></body></html>

@@ -1,0 +1,188 @@
+{
+  "model": "leaklens-context-v1",
+  "algorithm": "B-charngram-logreg",
+  "threshold": 0.2,
+  "n_test": 31378,
+  "positives": 15224,
+  "negatives": 16154,
+  "precision": 0.8897906374970596,
+  "recall": 0.9938255386232265,
+  "f1": 0.9389350875015514,
+  "roc_auc": 0.9555389547049481,
+  "pr_auc": 0.9172925219096697,
+  "confusion_matrix": {
+    "tp": 15130,
+    "fp": 1874,
+    "tn": 14280,
+    "fn": 94
+  },
+  "fp_per_1000": 59.72,
+  "hard_negative_holdout": {
+    "rows_scored": 10000,
+    "fpr": 0.0287,
+    "eval_only": true
+  },
+  "per_secret_type_recall": {
+    "API_KEY": {
+      "n": 1111,
+      "recall": 0.9442
+    },
+    "AWS_CREDENTIAL": {
+      "n": 1512,
+      "recall": 1.0
+    },
+    "AZURE_CREDENTIAL": {
+      "n": 1229,
+      "recall": 0.9992
+    },
+    "BEARER_TOKEN": {
+      "n": 896,
+      "recall": 1.0
+    },
+    "DATABASE_CREDENTIAL": {
+      "n": 1762,
+      "recall": 1.0
+    },
+    "GITHUB_TOKEN": {
+      "n": 1538,
+      "recall": 1.0
+    },
+    "GOOGLE_CREDENTIAL": {
+      "n": 1205,
+      "recall": 1.0
+    },
+    "JWT": {
+      "n": 1249,
+      "recall": 1.0
+    },
+    "PASSWORD": {
+      "n": 1085,
+      "recall": 0.9714
+    },
+    "PII_CREDIT_CARD": {
+      "n": 175,
+      "recall": 1.0
+    },
+    "PII_EMAIL": {
+      "n": 298,
+      "recall": 1.0
+    },
+    "PII_IP": {
+      "n": 157,
+      "recall": 1.0
+    },
+    "PII_PHONE": {
+      "n": 290,
+      "recall": 1.0
+    },
+    "PRIVATE_KEY": {
+      "n": 956,
+      "recall": 1.0
+    },
+    "SLACK_TOKEN": {
+      "n": 909,
+      "recall": 1.0
+    },
+    "STRIPE_SECRET": {
+      "n": 852,
+      "recall": 1.0
+    }
+  },
+  "label_schema": "contains_secret (v2)",
+  "threshold_sweep": [
+    {
+      "threshold": 0.3,
+      "precision": 0.8928656220322887,
+      "recall": 0.9881108775617446,
+      "f1": 0.9380768271389374,
+      "fpr": 0.11173703107589451,
+      "fnr": 0.011889122438255387,
+      "tp": 15043,
+      "fp": 1805,
+      "tn": 14349,
+      "fn": 181
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.8957584471603163,
+      "recall": 0.9821334734629532,
+      "f1": 0.9369595187366838,
+      "fpr": 0.1077132598737155,
+      "fnr": 0.01786652653704677,
+      "tp": 14952,
+      "fp": 1740,
+      "tn": 14414,
+      "fn": 272
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.8985691766703043,
+      "recall": 0.9735286389910668,
+      "f1": 0.9345482060659562,
+      "fpr": 0.10356568032685402,
+      "fnr": 0.026471361008933263,
+      "tp": 14821,
+      "fp": 1673,
+      "tn": 14481,
+      "fn": 403
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.901774710377126,
+      "recall": 0.961245401996847,
+      "f1": 0.9305608546356352,
+      "fpr": 0.09867525071189798,
+      "fnr": 0.03875459800315292,
+      "tp": 14634,
+      "fp": 1594,
+      "tn": 14560,
+      "fn": 590
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.9061330627259466,
+      "recall": 0.9384524435102469,
+      "f1": 0.9220096156948792,
+      "fpr": 0.09161817506499938,
+      "fnr": 0.06154755648975302,
+      "tp": 14287,
+      "fp": 1480,
+      "tn": 14674,
+      "fn": 937
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.9114808652246256,
+      "recall": 0.8995664739884393,
+      "f1": 0.9054844788257463,
+      "fpr": 0.08233254921381701,
+      "fnr": 0.10043352601156069,
+      "tp": 13695,
+      "fp": 1330,
+      "tn": 14824,
+      "fn": 1529
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.9159435599486908,
+      "recall": 0.7973594324750394,
+      "f1": 0.8525476700495136,
+      "fpr": 0.0689612479881144,
+      "fnr": 0.2026405675249606,
+      "tp": 12139,
+      "fp": 1114,
+      "tn": 15040,
+      "fn": 3085
+    }
+  ],
+  "context_labels_test": {
+    "FALSE_POSITIVE": 8159,
+    "EXAMPLE_SECRET": 1313,
+    "REAL_SECRET": 15224,
+    "DOCUMENTATION_EXAMPLE": 2079,
+    "PLACEHOLDER": 655,
+    "TEST_SECRET": 3234,
+    "HIGH_ENTROPY_NON_SECRET": 714
+  },
+  "note": "Measured on controlled synthetic test split (leaklens-synthetic-v2), not real-world data."
+}

@@ -1,0 +1,42 @@
+{
+  "exact_duplicates": 1448,
+  "near_duplicates": 5911,
+  "context_variants_preserved": 1819,
+  "repository_groups": 213726,
+  "template_groups": {
+    "tpl-pos-AWS_CREDENTIAL": 11000,
+    "tpl-pos-GOOGLE_CREDENTIAL": 8800,
+    "tpl-pos-AZURE_CREDENTIAL": 8800,
+    "tpl-neg-credentials-EXAMPLE_SECRET": 9090,
+    "tpl-neg-credentials-TEST_SECRET": 13635,
+    "tpl-pos-DATABASE_CREDENTIAL": 13200,
+    "tpl-neg-documentation-DOCUMENTATION_EXAMPLE": 4546,
+    "tpl-neg-high_entropy_non_secret-HIGH_ENTROPY_NON_SECRET": 4546,
+    "tpl-neg-high_entropy_non_secret-FALSE_POSITIVE": 54546,
+    "tpl-pos-PII_EMAIL": 2200,
+    "tpl-pos-PII_PHONE": 2200,
+    "tpl-pos-PII_IP": 1100,
+    "tpl-pos-PII_CREDIT_CARD": 1100,
+    "tpl-neg-placeholders-PLACEHOLDER": 4546,
+    "tpl-pos-PRIVATE_KEY": 6600,
+    "tpl-pos-API_KEY": 7700,
+    "tpl-pos-PASSWORD": 7700,
+    "tpl-neg-test_secrets-TEST_SECRET": 4546,
+    "tpl-pos-GITHUB_TOKEN": 11000,
+    "tpl-pos-STRIPE_SECRET": 6600,
+    "tpl-pos-SLACK_TOKEN": 6600,
+    "tpl-pos-JWT": 8800,
+    "tpl-pos-BEARER_TOKEN": 6600,
+    "tpl-neg-tokens-TEST_SECRET": 4545,
+    "repo-benign-python": 3226,
+    "repo-benign-javascript": 254,
+    "repo-benign-markdown": 226,
+    "repo-benign-ini": 20
+  },
+  "credential_family_groups": "n/a (synthetic values unique by construction)",
+  "split_leakage_checks": {
+    "leaked_groups": 0,
+    "passed": true,
+    "method": "leak_group disjointness"
+  }
+}

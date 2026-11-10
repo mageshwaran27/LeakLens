@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+leaklens.db
+uploads/
+reports/generated/
+reports/benchmark/
+*.log

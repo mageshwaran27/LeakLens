@@ -1,0 +1,33 @@
+{
+  "sources": [
+    {
+      "name": "leaklens-synthetic-v1",
+      "source": "generated locally by scripts/generate_synthetic_data.py",
+      "license": "Created for LeakLens; no third-party data; safe for redistribution",
+      "version": "1.0",
+      "download_date": "2026-09-29",
+      "description": "Controlled synthetic secrets + hard negatives (no real credentials)",
+      "record_count": 4000,
+      "label_schema": "TRUE_SECRET/.../FALSE_POSITIVE",
+      "preprocessing": "none (already normalized)",
+      "allowed_use": "training/evaluation"
+    },
+    {
+      "name": "leaklens-synthetic-v2",
+      "source": "scripts/generate_synthetic_data.py",
+      "license": "LeakLens-synthetic; generated locally; no third-party data; safe to redistribute",
+      "version": "2.0",
+      "download_date": "2026-09-29",
+      "description": "Scaled controlled synthetic secrets + unique hard negatives (non-functional values only)",
+      "record_count": 210000,
+      "accepted": 210000,
+      "rejected": 0,
+      "label_schema": "contains_secret + secret_type + context_label",
+      "preprocessing": "none",
+      "deduplication": "see duplicate_report.json",
+      "allowed_use": "training/evaluation",
+      "redaction_status": "n/a (synthetic, non-functional)"
+    }
+  ],
+  "updated": "2026-09-29T17:45:39.001173+00:00"
+}

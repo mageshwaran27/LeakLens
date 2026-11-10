@@ -1,0 +1,19 @@
+{
+  "A-tfidf-logreg": {
+    "val_f1_at_0.5": 0.8560554803788903,
+    "val_f1_calibrated": null
+  },
+  "B-charngram-logreg": {
+    "val_f1_at_0.5": 0.9426008405997114,
+    "val_f1_calibrated": 0.9435116409712253,
+    "threshold": 0.2
+  },
+  "D-tfidf-svm": {
+    "val_f1_at_0.5": 0.8558058241479435,
+    "val_f1_calibrated": null
+  },
+  "C-numeric-rf": {
+    "val_f1_at_0.5": 0.9354092018898437,
+    "val_f1_calibrated": null
+  }
+}

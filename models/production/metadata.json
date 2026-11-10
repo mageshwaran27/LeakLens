@@ -1,0 +1,26 @@
+{
+  "model_name": "leaklens-context-v1",
+  "version": "1.0.0",
+  "training_dataset": "leaklens-synthetic-v2",
+  "dataset_version": "v2.0",
+  "feature_version": "1.1.0",
+  "algorithm": "B-charngram-logreg",
+  "vectorizer": "TfidfVectorizer",
+  "training_date": "2026-09-30T05:51:56.347443+00:00",
+  "train_rows": 146426,
+  "val_rows": 31377,
+  "metrics": {
+    "validation_f1": 0.9435116409712253,
+    "threshold": 0.2,
+    "all_validation_f1": {
+      "A-tfidf-logreg": 0.8560554803788903,
+      "B-charngram-logreg": 0.9426008405997114,
+      "D-tfidf-svm": 0.8558058241479435,
+      "C-numeric-rf": 0.9354092018898437
+    }
+  },
+  "parameters": {
+    "choice": "best of ['A-tfidf-logreg', 'B-charngram-logreg', 'C-numeric-rf', 'D-tfidf-svm']",
+    "calibration": "sigmoid prefit on validation"
+  }
+}
